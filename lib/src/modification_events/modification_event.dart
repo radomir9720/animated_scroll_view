@@ -12,7 +12,7 @@ abstract class ModificationEvent<T> {
   Future<void> execute({
     required TickerProvider vsync,
     required ItemsNotifier<T> itemsNotifier,
-    required Sink<AnimationEntity> animationSink,
     required EventController<T> eventController,
+    required ItemsAnimationController itemsAnimationController,
   });
 }

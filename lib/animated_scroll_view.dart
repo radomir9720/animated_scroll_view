@@ -7,16 +7,23 @@ library animated_scroll_view;
 // and enable public_member_api_docs rule back
 
 export 'src/animated_scroll_view.dart';
+
+// Event controller
 export 'src/event_controller/event_controller.dart';
 export 'src/event_controller/default_event_controller.dart';
 
 // models
-export 'src/models/animation_controller_config.dart';
-export 'src/models/animation_entity.dart';
 export 'src/models/index_range.dart';
+export 'src/models/animation_entity.dart';
+export 'src/models/animation_controller_config.dart';
 
-//
-export 'src/utils/debouncer.dart';
+// exceptions
+export 'src/exceptions/animated_scroll_view_exception.dart';
+
+// In memory animations
+export 'src/in_memory_animation/in_memory_animation.dart';
+export 'src/in_memory_animation/delayed_in_memory_animation.dart';
+export 'src/in_memory_animation/static_in_memory_animation.dart';
 
 // transitions
 export 'src/widgets/transitions/size_and_fade_transition.dart';
@@ -33,12 +40,12 @@ export 'src/scrollables/sliver_child_builder_delegate.dart';
 // items notifier
 export 'src/items_notifier/items_notifier.dart';
 export 'src/items_notifier/default_items_notifier.dart';
-export 'src/items_notifier/mixins/debouncer_mixin.dart';
 export 'src/items_notifier/mixins/items_build_queue_mixin.dart';
 export 'src/items_notifier/mixins/mounted_widgets_index_range_mixin.dart';
 
 //
-export 'src/queued_animation/queued_animation.dart';
+export 'src/items_animation_controller/items_animation_controller.dart';
+export 'src/items_animation_controller/default_items_animation_controller.dart';
 
 // Events
 export 'src/modification_events/mixins/animation_controller_mixin.dart';

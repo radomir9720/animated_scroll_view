@@ -1,3 +1,4 @@
+import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/widgets.dart';
 
 /// {@template size_and_fade_transition}
@@ -24,7 +25,7 @@ class SizeAndFadeTransition extends StatelessWidget {
   /// Animation, provided to [SizeTransition.sizeFactor]
   /// and [FadeTransition.opacity]
   @protected
-  final Animation<double> animation;
+  final DoubleAnimation animation;
 
   /// [Axis.horizontal] if [SizeTransition.sizeFactor] modifies the width,
   /// otherwise [Axis.vertical].

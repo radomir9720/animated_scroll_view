@@ -24,8 +24,8 @@ class RemoveItemEvent<T> extends ItemAndItemIdConstructors<T>
   Future<void> execute({
     required ItemsNotifier<T> itemsNotifier,
     required TickerProvider vsync,
-    required Sink<AnimationEntity> animationSink,
     required EventController<T> eventController,
+    required ItemsAnimationController itemsAnimationController,
     AnimationControllerConfig? removeAnimationConfig,
   }) {
     final itemId = getItemId(itemsNotifier.idMapper);
@@ -37,8 +37,8 @@ class RemoveItemEvent<T> extends ItemAndItemIdConstructors<T>
     return runRemoveAnimation(
       vsync: vsync,
       itemId: itemId,
-      animationSink: animationSink,
       removeAnimationConfig: animationConfig,
+      itemsAnimationController: itemsAnimationController,
       onAnimationEnd: () => itemsNotifier.removeById(itemId),
     );
   }

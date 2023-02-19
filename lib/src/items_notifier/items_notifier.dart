@@ -111,26 +111,4 @@ abstract class ItemsNotifier<T> extends ChangeNotifier
 
   /// Returns item's index by it's [itemId]
   int getIndexById(String itemId);
-
-  /// Map with all the animations that are waiting to run.
-  ///
-  /// These animations were not started immediatly because the widgets(items),
-  /// these animations should run on, are not yet built/mounted/visible.
-  /// And there is no reason to run the animations until corresponding widgets
-  /// are built.
-  ///
-  /// It is expected after an animation start to
-  /// remove this animation from the map.
-  Map<String, QueuedAnimation> get queuedAnimationMap;
-
-  /// Adds an animation to queue([queuedAnimationMap])
-  void addQueuedAnimation(String itemId, QueuedAnimation queuedAnimation);
-
-  /// Pop an animation from queue if exists
-  ///
-  /// Returns an animation if it exists in the [queuedAnimationMap] with the
-  /// [itemId] key, and removes it from the queue[queuedAnimationMap].
-  /// Returns `null` if there is no animation for item with key [itemId] in
-  /// the queue([queuedAnimationMap])
-  QueuedAnimation? popQueuedAnimation(String itemId);
 }
