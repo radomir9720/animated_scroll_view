@@ -1,6 +1,6 @@
 import 'package:animated_scroll_view/animated_scroll_view.dart';
 
-mixin MountedWidgetsIndexRangeMixin {
+mixin MountedWidgetsIndexRangeMixin<T> on ItemsNotifier<T> {
   IndexRange _mountedWidgetsIndexRange = const IndexRange.initial();
 
   bool updateMountedWidgetsIndexRange(IndexRange newIndexRange) {
@@ -9,5 +9,6 @@ mixin MountedWidgetsIndexRangeMixin {
     return true;
   }
 
+  @override
   IndexRange get mountedWidgetsIndexRange => _mountedWidgetsIndexRange;
 }

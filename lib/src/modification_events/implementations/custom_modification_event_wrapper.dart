@@ -9,23 +9,23 @@ class CustomModificationWrapper<T> extends ModificationEvent<T> {
   @visibleForTesting
   final Future<void> Function(
     TickerProvider vsync,
-    Sink<AnimationEntity> animationSink,
     ItemsNotifier<T> itemsNotifier,
     EventController<T> eventController,
+    ItemsAnimationController itemsAnimationController,
   ) onExecute;
 
   @override
   Future<void> execute({
     required TickerProvider vsync,
-    required Sink<AnimationEntity> animationSink,
     required ItemsNotifier<T> itemsNotifier,
     required EventController<T> eventController,
+    required ItemsAnimationController itemsAnimationController,
   }) {
     return onExecute(
       vsync,
-      animationSink,
       itemsNotifier,
       eventController,
+      itemsAnimationController,
     );
   }
 }

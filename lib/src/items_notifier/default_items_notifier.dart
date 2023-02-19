@@ -1,38 +1,21 @@
 import 'package:animated_scroll_view/animated_scroll_view.dart';
-import 'package:animated_scroll_view/src/exceptions/animated_scroll_view_exception.dart';
 import 'package:animated_scroll_view/src/items_notifier/mixins/id_mapper_mixin.dart';
-import 'package:animated_scroll_view/src/items_notifier/mixins/queued_animation_mixin.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 class DefaultItemsNotifier<T> extends ItemsNotifier<T>
-    with
-        MountedWidgetsIndexRangeMixin,
-        ItemsBuildQueueMixin<T>,
-        QueuedAnimationMixin,
-        IDMapperMixin<T>,
-        DebouncerMixin {
+    with IDMapperMixin, ItemsBuildQueueMixin, MountedWidgetsIndexRangeMixin {
   DefaultItemsNotifier({
     super.onItemsUpdate,
     List<T> items = const [],
-    this.notifyDebounceDurationMillis = kNotifyDebounceDurationMillis,
-  }) : _items = [...items];
-
-  static const kNotifyDebounceDurationMillis = 50;
+  })  : _items = [...items],
+        _draftItems = [...items];
 
   bool _notifying = false;
 
-  @protected
-  @visibleForTesting
-  final int notifyDebounceDurationMillis;
-
-  @protected
-  @visibleForTesting
-  @override
-  int get debounceDurationMillis => notifyDebounceDurationMillis;
-
   List<T> _items;
+  List<T> _draftItems;
 
   @override
   void mountedWidgetsIndexRangeChanged(IndexRange newIndexRange) {
@@ -43,7 +26,7 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
 
   @override
   int getIndexById(String itemId) {
-    final index = value.indexWhere(
+    final index = _draftItems.indexWhere(
       (element) => itemId == idMapper(element),
     );
 
@@ -54,7 +37,8 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
 
   @override
   T removeAt(int index, {bool forceNotify = true}) {
-    final i = _items.removeAt(index);
+    final i = _draftItems.removeAt(index);
+
     _onItemsUpdate(forceNotify);
     return i;
   }
@@ -68,27 +52,27 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
 
   @override
   void remove(T item, {bool forceNotify = true}) {
-    if (!_items.remove(item)) throw ItemNotFoundException(idMapper(item));
+    if (!_draftItems.remove(item)) throw ItemNotFoundException(idMapper(item));
     _onItemsUpdate(forceNotify);
   }
 
   @override
-  void insert(int index, T item, {bool forceNotify = true}) {
+  void insert(int index, T item, {bool forceNotify = false}) {
     addItemToBuildQueue(index, item);
-    _items.insert(index, item);
-    _onItemsUpdate(forceNotify);
-    _notifyIfNeedTo();
+    _draftItems.insert(index, item);
+    onItemsUpdate?.call(_draftItems);
+    _notifyIfNeedTo(forceNotify: forceNotify);
   }
 
   @override
   List<T> get value => _items;
 
-  void _notifyIfNeedTo() {
+  void _notifyIfNeedTo({bool forceNotify = false}) {
     if (_notifying) return;
     if (itemsBuildQueue.isEmpty) return;
     _notifying = true;
     final entries = [...itemsBuildQueue.entries];
-    var notify = false;
+    var notify = forceNotify;
     for (final entry in entries) {
       final index = entry.key;
       if (index >= mountedWidgetsIndexRange.start) {
@@ -99,6 +83,7 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
 
     if (notify) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        _items = [..._draftItems];
         notifyListeners();
       });
     }
@@ -106,21 +91,19 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
   }
 
   void _onItemsUpdate(bool notify) {
-    onItemsUpdate?.call(_items);
-    if (notify) debouncer.run(notifyListeners);
+    onItemsUpdate?.call(_draftItems);
+    if (notify) {
+      _items = [..._draftItems];
+      notifyListeners();
+    }
   }
 
   @override
   void updateValue(List<T> items, {bool forceNotify = false}) {
-    if (const DeepCollectionEquality().equals(_items, items)) return;
+    if (const DeepCollectionEquality().equals(_draftItems, items)) return;
     _items = [...items];
+    _draftItems = [...items];
     _onItemsUpdate(forceNotify);
-  }
-
-  @override
-  void dispose() {
-    debouncer.dispose();
-    super.dispose();
   }
 
   @override

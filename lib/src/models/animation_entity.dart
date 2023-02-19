@@ -1,7 +1,8 @@
+import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/widgets.dart';
 
 @immutable
-class AnimationEntity<A extends Animation<double>> {
+class AnimationEntity<A extends DoubleAnimation> {
   const AnimationEntity({required this.itemId, required this.animation});
 
   final String itemId;

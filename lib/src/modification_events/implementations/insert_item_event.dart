@@ -30,26 +30,32 @@ class InsertItemEvent<T> extends ModificationEvent<T>
   Future<void> execute({
     required TickerProvider vsync,
     required ItemsNotifier<T> itemsNotifier,
-    required Sink<AnimationEntity> animationSink,
     required EventController<T> eventController,
+    required ItemsAnimationController itemsAnimationController,
   }) async {
     final _index = index ?? itemsNotifier.value.length;
     final itemId = itemsNotifier.idMapper(item);
 
-    itemsNotifier
-      ..addQueuedAnimation(
-        itemId,
-        QueuedAnimation<AnimationController>(
-          createAnimationCallback: (vsync) {
-            return getAnimation(
-              vsync,
-              config: animationConfig,
-            );
-          },
-          runCallback: (animation) => animation.forward(),
-          disposeCallback: (animation) => animation.dispose(),
-        ),
-      )
-      ..insert(_index, item, forceNotify: forceNotify);
+    final delayedAnimation = DelayedInMemoryAnimation<AnimationController>(
+      createAnimationCallback: (vsync) {
+        return getAnimation(
+          vsync,
+          config: animationConfig,
+        );
+      },
+      runCallback: (animation) => animation.forward(),
+      disposeCallback: (animation) {
+        itemsAnimationController.cachedAnimationValue[itemId] =
+            animationConfig.uppedBound;
+
+        animation
+          ..stop()
+          ..dispose();
+      },
+    );
+
+    itemsAnimationController.inMemoryAnimationMap[itemId] = delayedAnimation;
+
+    itemsNotifier.insert(_index, item, forceNotify: forceNotify);
   }
 }

@@ -1,5 +1,4 @@
 import 'package:animated_scroll_view/animated_scroll_view.dart';
-import 'package:animated_scroll_view/src/exceptions/animated_scroll_view_exception.dart';
 
 class IDMapperNotSet extends AnimatedScrollViewException {
   const IDMapperNotSet()
@@ -9,15 +8,17 @@ class IDMapperNotSet extends AnimatedScrollViewException {
         );
 }
 
-class IDMapperMixin<T> {
+mixin IDMapperMixin<T> on ItemsNotifier<T> {
   IDMapper<T>? _idMapper;
 
+  @override
   IDMapper<T> get idMapper {
     final mapper = _idMapper;
     if (mapper == null) throw const IDMapperNotSet();
     return mapper;
   }
 
+  @override
   set idMapper(IDMapper<T> idMapper) {
     _idMapper = idMapper;
   }

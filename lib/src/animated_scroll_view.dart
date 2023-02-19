@@ -6,6 +6,8 @@ import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:animated_scroll_view/src/animated_item_widget.dart';
 import 'package:flutter/widgets.dart';
 
+typedef DoubleAnimation = Animation<double>;
+
 /// Intended to be passed to [SliverChildDelegate.didFinishLayout]
 typedef OnDidFinishLayoutCallback = void Function(
   int firstIndex,
@@ -59,7 +61,7 @@ typedef ItemBuilder<T> = Widget Function(T item);
 ///
 /// {@endtemplate}
 typedef ItemWrapper = Widget Function(
-  Animation<double> animation,
+  DoubleAnimation animation,
   Widget item,
 );
 
@@ -107,6 +109,7 @@ class AnimatedScrollView<T> extends StatefulWidget {
     required this.itemBuilder,
     this.itemsNotifier,
     this.itemWrapper,
+    this.itemsAnimationController,
   });
 
   /// List of items of arbitrary type [T]
@@ -149,11 +152,14 @@ class AnimatedScrollView<T> extends StatefulWidget {
 
   /// {@macro animated_scroll_view.item_wrapper}
   @protected
-  final Widget Function(Animation<double> animation, Widget child)? itemWrapper;
+  final ItemWrapper? itemWrapper;
 
   /// {@macro items_notifier}
   @protected
   final ItemsNotifier<T>? itemsNotifier;
+
+  @protected
+  final ItemsAnimationController<DoubleAnimation>? itemsAnimationController;
 
   @override
   State<AnimatedScrollView<T>> createState() => _AnimatedScrollViewState();
@@ -163,11 +169,12 @@ class _AnimatedScrollViewState<T> extends State<AnimatedScrollView<T>>
     with TickerProviderStateMixin {
   late final ItemsNotifier<T> itemsNotifier;
   late final StreamSubscription<void> itemsEventSubscription;
-  late final StreamController<AnimationEntity> animationEntityStreamController;
+  late final ItemsAnimationController itemsAnimationController;
 
   @override
   void initState() {
-    animationEntityStreamController = StreamController.broadcast();
+    itemsAnimationController =
+        widget.itemsAnimationController ?? DefaultItemsAnimationController();
     itemsNotifier = widget.itemsNotifier ?? DefaultItemsNotifier();
     itemsNotifier
       ..updateValue(widget.items)
@@ -188,7 +195,7 @@ class _AnimatedScrollViewState<T> extends State<AnimatedScrollView<T>>
       vsync: this,
       itemsNotifier: itemsNotifier,
       eventController: widget.eventController,
-      animationSink: animationEntityStreamController,
+      itemsAnimationController: itemsAnimationController,
     );
   }
 
@@ -197,7 +204,10 @@ class _AnimatedScrollViewState<T> extends State<AnimatedScrollView<T>>
     if (widget.itemsNotifier == null) {
       itemsNotifier.dispose();
     }
-    animationEntityStreamController.close();
+    if (widget.itemsAnimationController == null) {
+      itemsAnimationController.close();
+    }
+
     itemsEventSubscription.cancel();
     super.dispose();
   }
@@ -217,6 +227,7 @@ class _AnimatedScrollViewState<T> extends State<AnimatedScrollView<T>>
             return AnimatedItemWidget(
               key: ValueKey(id),
               id: id,
+              index: index,
               builder: (animation) {
                 return widget.itemWrapper?.call(animation, child) ??
                     SizeAndFadeTransition(
@@ -228,7 +239,7 @@ class _AnimatedScrollViewState<T> extends State<AnimatedScrollView<T>>
                     );
               },
               itemsNotifier: itemsNotifier,
-              animationEntityStream: animationEntityStreamController.stream,
+              itemsAnimationController: itemsAnimationController,
             );
           },
           (firstIndex, lastIndex) {

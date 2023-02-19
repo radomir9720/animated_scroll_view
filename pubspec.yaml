@@ -4,7 +4,7 @@ repository: https://github.com/radomir9720/animated_scroll_view
 
 publish_to: "none"
 
-version: 0.1.0
+version: 0.2.0
 
 environment:
   sdk: ">=2.18.0 <3.0.0"

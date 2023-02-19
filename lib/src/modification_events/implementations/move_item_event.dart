@@ -52,7 +52,7 @@ class MoveItemEvent<T> extends ItemAndItemIdConstructors<T>
     required TickerProvider vsync,
     required ItemsNotifier<T> itemsNotifier,
     required EventController<T> eventController,
-    required Sink<AnimationEntity> animationSink,
+    required ItemsAnimationController itemsAnimationController,
   }) async {
     final itemId = getItemId(itemsNotifier.idMapper);
 
@@ -78,7 +78,7 @@ class MoveItemEvent<T> extends ItemAndItemIdConstructors<T>
     return runRemoveAnimation(
       vsync: vsync,
       itemId: itemId,
-      animationSink: animationSink,
+      itemsAnimationController: itemsAnimationController,
       removeAnimationConfig: animationConfigs.remove,
       onAnimationEnd: () {
         final current = itemsNotifier.removeAt(

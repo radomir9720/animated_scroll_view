@@ -13,7 +13,7 @@ class PointerIgnorer extends StatelessWidget {
   final Widget child;
 
   @protected
-  final Animation<double> animation;
+  final DoubleAnimation animation;
 
   @protected
   final PointerIgnoreCondition ignoreCondition;

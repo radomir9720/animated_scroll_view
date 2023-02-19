@@ -1,18 +1,11 @@
 import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/animation.dart';
 
-mixin RemoveItemEventAnimationMixin<T> {
-  AnimationController getAnimation(
-    TickerProvider vsync, {
-    AnimationControllerConfig config = const AnimationControllerConfig(),
-  });
-
-  void dispose();
-
+mixin RemoveItemEventAnimationMixin<T> on AnimationControllerMixin {
   Future<void> runRemoveAnimation({
     required TickerProvider vsync,
     required AnimationControllerConfig removeAnimationConfig,
-    required Sink<AnimationEntity> animationSink,
+    required ItemsAnimationController itemsAnimationController,
     required String itemId,
     void Function()? onAnimationEnd,
   }) async {
@@ -21,7 +14,7 @@ mixin RemoveItemEventAnimationMixin<T> {
       config: removeAnimationConfig,
     );
 
-    animationSink.add(
+    itemsAnimationController.add(
       AnimationEntity(
         itemId: itemId,
         animation: animationController,
@@ -30,6 +23,9 @@ mixin RemoveItemEventAnimationMixin<T> {
 
     return animationController.reverse().then(
       (value) {
+        itemsAnimationController.cachedAnimationValue[itemId] =
+            removeAnimationConfig.lowerBound;
+
         dispose();
         onAnimationEnd?.call();
       },
