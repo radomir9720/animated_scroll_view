@@ -4,6 +4,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 @WidgetbookApp.material(
   name: 'animated_scroll_view',
   foldersExpanded: true,
+  widgetsExpanded: true,
   devices: [
     Apple.iPhoneSE2016,
     Apple.iPhoneSE2020,
