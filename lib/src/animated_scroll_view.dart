@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:animated_scroll_view/animated_scroll_view.dart';
-import 'package:animated_scroll_view/src/animated_item_widget.dart';
+import 'package:animated_scroll_view/src/widgets/animated_item/animated_item_widget.dart';
 import 'package:flutter/widgets.dart';
 
 typedef DoubleAnimation = Animation<double>;

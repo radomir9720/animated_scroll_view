@@ -4,7 +4,7 @@ import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/widgets.dart';
 
 class InsertItemEvent<T> extends ModificationEvent<T>
-    with AnimationControllerMixin {
+    with AnimationControllerMixin, CheckInsertIndexIsValidMixin {
   InsertItemEvent({
     this.index,
     required this.item,
@@ -34,7 +34,13 @@ class InsertItemEvent<T> extends ModificationEvent<T>
     required ItemsAnimationController itemsAnimationController,
   }) async {
     final _index = index ?? itemsNotifier.value.length;
+
+    throwIfIndexIsInvalid(itemsNotifier, _index);
+
     final itemId = itemsNotifier.idMapper(item);
+
+    itemsAnimationController.cachedAnimationValue[itemId] =
+        animationConfig.lowerBound;
 
     final delayedAnimation = DelayedInMemoryAnimation<AnimationController>(
       createAnimationCallback: (vsync) {

@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:animated_scroll_view/animated_scroll_view.dart';
-import 'package:animated_scroll_view/src/items_animation_controller/mixins/cached_animation_value_mixin.dart';
-import 'package:animated_scroll_view/src/items_animation_controller/mixins/in_memory_animation_mixin.dart';
 import 'package:meta/meta.dart';
 
 class DefaultItemsAnimationController extends ItemsAnimationController

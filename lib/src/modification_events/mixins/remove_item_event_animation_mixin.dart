@@ -1,7 +1,7 @@
 import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/animation.dart';
 
-mixin RemoveItemEventAnimationMixin<T> on AnimationControllerMixin {
+mixin RemoveItemEventAnimationMixin<T> on AnimationControllerMixin<T> {
   Future<void> runRemoveAnimation({
     required TickerProvider vsync,
     required AnimationControllerConfig removeAnimationConfig,

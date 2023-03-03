@@ -1,8 +1,6 @@
 import 'package:animated_scroll_view/animated_scroll_view.dart';
-import 'package:animated_scroll_view/src/items_notifier/mixins/id_mapper_mixin.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 
 class DefaultItemsNotifier<T> extends ItemsNotifier<T>
     with IDMapperMixin, ItemsBuildQueueMixin, MountedWidgetsIndexRangeMixin {
@@ -82,7 +80,7 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
     }
 
     if (notify) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.microtask(() {
         _items = [..._draftItems];
         notifyListeners();
       });

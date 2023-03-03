@@ -1,10 +1,13 @@
 import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:meta/meta.dart';
 
-abstract class ItemAndItemIdConstructors<T> {
-  const ItemAndItemIdConstructors(this.item) : itemId = null;
+abstract class ModificationEventWithItemAndItemIdConstructors<T>
+    implements ModificationEvent<T> {
+  const ModificationEventWithItemAndItemIdConstructors(this.item)
+      : itemId = null;
 
-  ItemAndItemIdConstructors.byId(this.itemId) : item = null;
+  ModificationEventWithItemAndItemIdConstructors.byId(this.itemId)
+      : item = null;
 
   final String? itemId;
 
