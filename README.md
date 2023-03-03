@@ -11,10 +11,10 @@ Real application examples can be found [here][real_app_example_link1] and [here]
 
 Mainly, developed as a replacement for out-of-the-box animated scrollables:
 
-- [AnimatedList]
-- [SliverAnimatedList]
-- [AnimatedGrid] (available from flutter version 3.7.0)
-- [SliverAnimatedGrid] (available from flutter version 3.7.0)
+- `AnimatedList`
+- `SliverAnimatedList`
+- `AnimatedGrid` (available from flutter version 3.7.0)
+- `SliverAnimatedGrid` (available from flutter version 3.7.0)
 
 because of their numerous disadvantages:
 
@@ -24,28 +24,30 @@ layout(Issue [#74031](https://github.com/flutter/flutter/issues/74031)).
 is required to write a lot of code to make it work
 - There is a lot of cases when developer can forget/miss something to setup,
 and, as a result, lose a lot of time figuring out what's wrong(e.g. [#63185](https://github.com/flutter/flutter/issues/63185))
-- [AnimatedGrid] and [SliverAnimatedGrid] are not available if you are using
+- `AnimatedGrid` and `SliverAnimatedGrid` are not available if you are using
 flutter version below 3.7.0
+
+Also, `AnimatedPageView` widget can be useful for you, as it does not have an out of the box analogue.
 
 There are already implementations-replacements for each of the
 out-of-the-box animated scrollables mentioned above:
 
-- [AnimatedListView] (replacement for [AnimatedList])
-- [SliverAnimatedListView] (replacement for [SliverAnimatedList])
-- [AnimatedGridView] (replacement for [AnimatedGrid])
-- [SliverAnimatedGridView] (replacement for [SliverAnimatedGrid])
+- `AnimatedListView` (replacement for `AnimatedList`)
+- `SliverAnimatedListView` (replacement for `SliverAnimatedList`)
+- `AnimatedGridView` (replacement for `AnimatedGrid`)
+- `SliverAnimatedGridView` (replacement for `SliverAnimatedGrid`)
 
-Also, you can extend [AnimatedScrollView], and create your own
+Also, you can extend `AnimatedScrollView`, and create your own
 implementation, using the API of this package.
 
 ## TODO:
  - [ ] Simultaneously removing and inserting item when moving([#35618](https://github.com/flutter/flutter/issues/35618))
  - [ ] Write documentation
- - [ ] For GridView: animate items, rebuild of which is caused by another items modification event
- - [ ] [Set default axis](https://github.com/flutter/flutter/issues/100931) for SizeAndFadeTransition to axis of the scrollable
+ - [ ] For `GridView` and `PageView`: animate items, rebuild of which is caused by another items modification event
+ - [ ] [Set default axis](https://github.com/flutter/flutter/issues/100931) for `SizeAndFadeTransition` to axis of the scrollable
  - [ ] Write tests
- - [ ] AnimatedPageView([#58959](https://github.com/flutter/flutter/issues/58959))?
- - [X] Wrap ItemWidget in SizedAndFadeTransition and PointerIgnorer by default?
+ - [x] AnimatedPageView([#58959](https://github.com/flutter/flutter/issues/58959))?
+ - [X] Wrap ItemWidget in `SizedAndFadeTransition` and `PointerIgnorer` by default?
  - [x] Widgetbook with live demo examples
 
 ## Installation 💻

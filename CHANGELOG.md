@@ -1,3 +1,9 @@
+# 0.4.0
+
+* feat: added AnimatedPageView widget
+* chore: made all widgets expanded by default on widgetbook app
+* chore: added use case to widgetbook app for AnimatedPageView
+
 # 0.3.0
 * feat: added widgetbook app with examples
 * ci: added workflow, which builds the widgetbook app
