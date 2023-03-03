@@ -1,3 +1,11 @@
+# Generated code
+**/*.g.dart
+**/*.gr.dart
+**/*.config.dart
+**/*.freezed.dart
+**/*.widgetbook.dart
+
+
 # Miscellaneous
 *.class
 *.log

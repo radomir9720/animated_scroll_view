@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:animated_scroll_view/animated_scroll_view.dart';
-import 'package:animated_scroll_view/src/modification_events/mixins/item_and_item_id_constructors.dart';
-import 'package:animated_scroll_view/src/modification_events/mixins/remove_item_event_animation_mixin.dart';
 import 'package:flutter/animation.dart';
 import 'package:meta/meta.dart';
 
@@ -16,9 +14,11 @@ class AnimationConfigs {
   final AnimationControllerConfig insert;
 }
 
-class MoveItemEvent<T> extends ItemAndItemIdConstructors<T>
-    with AnimationControllerMixin, RemoveItemEventAnimationMixin<T>
-    implements ModificationEvent<T> {
+class MoveItemEvent<T> extends ModificationEventWithItemAndItemIdConstructors<T>
+    with
+        AnimationControllerMixin,
+        CheckInsertIndexIsValidMixin,
+        RemoveItemEventAnimationMixin {
   MoveItemEvent({
     required T item,
     required this.newIndex,
@@ -55,6 +55,8 @@ class MoveItemEvent<T> extends ItemAndItemIdConstructors<T>
     required ItemsAnimationController itemsAnimationController,
   }) async {
     final itemId = getItemId(itemsNotifier.idMapper);
+
+    throwIfIndexIsInvalid(itemsNotifier, newIndex);
 
     // getIndexById() will throw an Excception if the item with specified id
     // is not found, therefore code execution will stop, as intended.

@@ -5,44 +5,50 @@
 
 Scrollable widget, which lets you easily animate its items list modifications(insert, remove, move, etc.).
 
+## **[LIVE DEMO](https://radomir9720.github.io/animated_scroll_view/#/)**
+_Examples(from live demo) can be found [here][live_demo_examples_link].
+Real application examples can be found [here][real_app_example_link1] and [here][real_app_example_link2]_
+
 Mainly, developed as a replacement for out-of-the-box animated scrollables:
 
-- [AnimatedList]
-- [SliverAnimatedList]
-- [AnimatedGrid] (available from flutter version 3.7.0)
-- [SliverAnimatedGrid] (available from flutter version 3.7.0)
+- `AnimatedList`
+- `SliverAnimatedList`
+- `AnimatedGrid` (available from flutter version 3.7.0)
+- `SliverAnimatedGrid` (available from flutter version 3.7.0)
 
 because of their numerous disadvantages:
 
 - Scroll offset jumps when an item is built atop(outside) of the current
-layout. Issues: [#74031](https://github.com/flutter/flutter/issues/74031).
+layout(Issue [#74031](https://github.com/flutter/flutter/issues/74031)).
 - Out-of-the-box animated scrollables have inconvinient API, developer
 is required to write a lot of code to make it work
 - There is a lot of cases when developer can forget/miss something to setup,
 and, as a result, lose a lot of time figuring out what's wrong(e.g. [#63185](https://github.com/flutter/flutter/issues/63185))
-- [AnimatedGrid] and [SliverAnimatedGrid] are not available if you are using
+- `AnimatedGrid` and `SliverAnimatedGrid` are not available if you are using
 flutter version below 3.7.0
+
+Also, `AnimatedPageView` widget can be useful for you, as it does not have an out of the box analogue.
 
 There are already implementations-replacements for each of the
 out-of-the-box animated scrollables mentioned above:
 
-- [AnimatedListView] (replacement for [AnimatedList])
-- [SliverAnimatedListView] (replacement for [SliverAnimatedList])
-- [AnimatedGridView] (replacement for [AnimatedGrid])
-- [SliverAnimatedGridView] (replacement for [SliverAnimatedGrid])
+- `AnimatedListView` (replacement for `AnimatedList`)
+- `SliverAnimatedListView` (replacement for `SliverAnimatedList`)
+- `AnimatedGridView` (replacement for `AnimatedGrid`)
+- `SliverAnimatedGridView` (replacement for `SliverAnimatedGrid`)
 
-Also, you can extend [AnimatedScrollView], and create your own
+Also, you can extend `AnimatedScrollView`, and create your own
 implementation, using the API of this package.
 
 ## TODO:
  - [ ] Simultaneously removing and inserting item when moving([#35618](https://github.com/flutter/flutter/issues/35618))
- - [ ] Write the docs
- - [ ] For GridView: animate items, rebuild of which is caused by another items modification event
- - [ ] [Set default axis](https://github.com/flutter/flutter/issues/100931) for SizeAndFadeTransition to axis of the scrollable
+ - [ ] Write documentation
+ - [ ] For `GridView` and `PageView`: animate items, rebuild of which is caused by another items modification event
+ - [ ] [Set default axis](https://github.com/flutter/flutter/issues/100931) for `SizeAndFadeTransition` to axis of the scrollable
  - [ ] Write tests
- - [ ] AnimatedPageView([#58959](https://github.com/flutter/flutter/issues/58959))?
- - [X] Wrap ItemWidget in SizedAndFadeTransition and PointerIgnorer by default?
- - [ ] Widgetbook with live demo examples
+ - [x] AnimatedPageView([#58959](https://github.com/flutter/flutter/issues/58959))?
+ - [X] Wrap ItemWidget in `SizedAndFadeTransition` and `PointerIgnorer` by default?
+ - [x] Widgetbook with live demo examples
 
 ## Installation 💻
 
@@ -50,7 +56,7 @@ Add `animated_scroll_view` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  animated_scroll_view:
+  animated_scroll_view: ^0.4.0
 ```
 
 Install it:
@@ -59,52 +65,10 @@ Install it:
 flutter packages get
 ```
 
----
-
-## Continuous Integration 🤖
-
-Animated Scroll View comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
-
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
-
----
-
-## Running Tests 🧪
-
-For first time users, install the [very_good_cli][very_good_cli_link]:
-
-```sh
-dart pub global activate very_good_cli
-```
-
-To run all unit tests:
-
-```sh
-very_good test --coverage
-```
-
-To view the generated coverage report you can use [lcov](https://github.com/linux-test-project/lcov).
-
-```sh
-# Generate Coverage Report
-genhtml coverage/lcov.info -o coverage/
-
-# Open Coverage Report
-open coverage/index.html
-```
-
-[flutter_install_link]: https://docs.flutter.dev/get-started/install
-[github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [license_link]: https://opensource.org/licenses/MIT
-[logo_black]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_black.png#gh-light-mode-only
-[logo_white]: https://raw.githubusercontent.com/VGVentures/very_good_brand/main/styles/README/vgv_logo_white.png#gh-dark-mode-only
-[mason_link]: https://github.com/felangel/mason
 [very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
 [very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
-[very_good_cli_link]: https://pub.dev/packages/very_good_cli
-[very_good_coverage_link]: https://github.com/marketplace/actions/very-good-coverage
-[very_good_ventures_link]: https://verygood.ventures
-[very_good_ventures_link_light]: https://verygood.ventures#gh-light-mode-only
-[very_good_ventures_link_dark]: https://verygood.ventures#gh-dark-mode-only
-[very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
+[real_app_example_link1]: https://github.com/radomir9720/pixel_app_flutter/blob/0.5.0/lib/presentation/screens/apps/body/handset_apps_screen_body.dart
+[real_app_example_link2]: https://github.com/radomir9720/pixel_app_flutter/blob/0.5.0/lib/presentation/screens/apps/body/tablet_apps_screen_body.dart
+[live_demo_examples_link]: https://github.com/radomir9720/animated_scroll_view/tree/main/widgetbook_app/lib/widgets/scrollables

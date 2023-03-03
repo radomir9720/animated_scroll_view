@@ -2,7 +2,7 @@ import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/widgets.dart';
 
-mixin AnimationControllerMixin {
+mixin AnimationControllerMixin<T> on ModificationEvent<T> {
   AnimationController? _animation;
 
   AnimationController getAnimation(

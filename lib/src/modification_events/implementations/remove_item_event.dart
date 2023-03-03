@@ -1,13 +1,11 @@
 import 'dart:async';
 
 import 'package:animated_scroll_view/animated_scroll_view.dart';
-import 'package:animated_scroll_view/src/modification_events/mixins/item_and_item_id_constructors.dart';
-import 'package:animated_scroll_view/src/modification_events/mixins/remove_item_event_animation_mixin.dart';
 import 'package:flutter/animation.dart';
 
-class RemoveItemEvent<T> extends ItemAndItemIdConstructors<T>
-    with AnimationControllerMixin, RemoveItemEventAnimationMixin<T>
-    implements ModificationEvent<T> {
+class RemoveItemEvent<T>
+    extends ModificationEventWithItemAndItemIdConstructors<T>
+    with AnimationControllerMixin, RemoveItemEventAnimationMixin {
   RemoveItemEvent({
     required T item,
     this.animationConfig = const AnimationControllerConfig(),

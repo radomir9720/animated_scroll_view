@@ -37,6 +37,10 @@ class OperationPointerIgnoreCondition implements PointerIgnoreCondition {
 
   @override
   int get hashCode => value.hashCode ^ operation.hashCode;
+
+  @override
+  String toString() =>
+      'OperationPointerIgnoreCondition(value: $value, operation: $operation)';
 }
 
 extension OperationPointerIgnoreConditionExtension on num {
