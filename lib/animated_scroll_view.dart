@@ -61,6 +61,7 @@ export 'src/widgets/pointer_ignorer/pointer_ignore_condition/always_false_pointe
 // Scrollables
 export 'src/widgets/scrollables/animated_grid_view.dart';
 export 'src/widgets/scrollables/animated_list_view.dart';
+export 'src/widgets/scrollables/animated_page_view.dart';
 export 'src/widgets/scrollables/sliver_animated_list_view.dart';
 export 'src/widgets/scrollables/sliver_animated_grid_view.dart';
 export 'src/widgets/scrollables/sliver_child_builder_delegate.dart';
