@@ -2,18 +2,28 @@ import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
+/// {@template default_items_notifier}
+/// {@macro items_notifier}
+///
+/// This is the default implementation of [ItemsNotifier]
+/// {@endtemplate}
 class DefaultItemsNotifier<T> extends ItemsNotifier<T>
-    with IDMapperMixin, ItemsBuildQueueMixin, MountedWidgetsIndexRangeMixin {
+    with IDMapperMixin<T>, MountedWidgetsIndexRangeMixin {
+  /// {@macro default_items_notifier}
   DefaultItemsNotifier({
     super.onItemsUpdate,
     List<T> items = const [],
-  })  : _items = [...items],
-        _draftItems = [...items];
+  }) : _itemsEntity = ItemsEntity<T>(items);
 
   bool _notifying = false;
 
-  List<T> _items;
-  List<T> _draftItems;
+  ItemsEntity<T> _itemsEntity;
+
+  @override
+  set idMapper(IDMapper<T> idMapper) {
+    _itemsEntity.idMapper = idMapper;
+    super.idMapper = idMapper;
+  }
 
   @override
   void mountedWidgetsIndexRangeChanged(IndexRange newIndexRange) {
@@ -24,7 +34,7 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
 
   @override
   int getIndexById(String itemId) {
-    final index = _draftItems.indexWhere(
+    final index = _itemsEntity.indexWhere(
       (element) => itemId == idMapper(element),
     );
 
@@ -35,7 +45,10 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
 
   @override
   T removeAt(int index, {bool forceNotify = true}) {
-    final i = _draftItems.removeAt(index);
+    final i = _itemsEntity.removeItemAt(
+      index: index,
+      mountedRange: mountedWidgetsIndexRange,
+    );
 
     _onItemsUpdate(forceNotify);
     return i;
@@ -43,72 +56,60 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
 
   @override
   T removeById(String itemId, {bool forceNotify = true}) {
-    final index = getIndexById(itemId);
-    final i = removeAt(index, forceNotify: forceNotify);
-    return i;
+    final item = _itemsEntity.removeItemById(
+      id: itemId,
+      mountedRange: mountedWidgetsIndexRange,
+    );
+    _onItemsUpdate(forceNotify);
+    return item;
   }
 
   @override
   void remove(T item, {bool forceNotify = true}) {
-    if (!_draftItems.remove(item)) throw ItemNotFoundException(idMapper(item));
+    _itemsEntity.removeItem(item: item, mountedRange: mountedWidgetsIndexRange);
     _onItemsUpdate(forceNotify);
   }
 
   @override
   void insert(int index, T item, {bool forceNotify = false}) {
-    addItemToBuildQueue(index, item);
-    _draftItems.insert(index, item);
-    onItemsUpdate?.call(_draftItems);
-    _notifyIfNeedTo(forceNotify: forceNotify);
+    final displayImmediately = _itemsEntity.insertItem(
+      index: index,
+      element: item,
+      mountedRange: mountedWidgetsIndexRange,
+    );
+    _updateActual();
+    _notifyIfNeedTo(forceNotify: forceNotify || displayImmediately);
   }
 
   @override
-  List<T> get value => _items;
+  List<T> get value => _itemsEntity.visibleItems;
+
+  void _updateActual() => onItemsUpdate?.call(_itemsEntity);
 
   void _notifyIfNeedTo({bool forceNotify = false}) {
     if (_notifying) return;
-    if (itemsBuildQueue.isEmpty) return;
     _notifying = true;
-    final entries = [...itemsBuildQueue.entries];
-    var notify = forceNotify;
-    for (final entry in entries) {
-      final index = entry.key;
-      if (index >= mountedWidgetsIndexRange.start) {
-        itemsBuildQueue.remove(index);
-        notify = true;
-      }
-    }
+    final notify =
+        _itemsEntity.makeVisible(mountedWidgetsIndexRange) || forceNotify;
 
-    if (notify) {
-      Future.microtask(() {
-        _items = [..._draftItems];
-        notifyListeners();
-      });
-    }
+    if (notify) Future.microtask(notifyListeners);
+
     _notifying = false;
   }
 
   void _onItemsUpdate(bool notify) {
-    onItemsUpdate?.call(_draftItems);
-    if (notify) {
-      _items = [..._draftItems];
-      notifyListeners();
-    }
+    _updateActual();
+    if (notify) notifyListeners();
   }
 
   @override
   void updateValue(List<T> items, {bool forceNotify = false}) {
-    if (const DeepCollectionEquality().equals(_draftItems, items)) return;
-    _items = [...items];
-    _draftItems = [...items];
+    if (const DeepCollectionEquality().equals(_itemsEntity, items)) return;
+
+    _itemsEntity = ItemsEntity(items);
     _onItemsUpdate(forceNotify);
   }
 
   @override
   String toString() => '${describeIdentity(this)}($value)';
-}
-
-class ItemNotFoundException extends AnimatedScrollViewException {
-  const ItemNotFoundException(String id)
-      : super('Could not find item with id: $id');
 }
