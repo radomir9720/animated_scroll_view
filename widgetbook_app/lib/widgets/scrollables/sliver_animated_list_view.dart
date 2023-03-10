@@ -7,20 +7,24 @@ import 'package:widgetbook_app/widgets/scrollables/widgets/controls_wrapper.dart
 Widget buildSliverAnimatedListView(BuildContext context) {
   return AnimatedScrollViewControlsWrapper(
     viewBuilder: (itemsNotifier, eventController, items) {
-      return SliverAnimatedListView(
-        itemsNotifier: itemsNotifier,
-        eventController: eventController,
-        idMapper: (object) => object.id.toString(),
-        itemBuilder: (item) {
-          return ListTile(
-            leading: SizedBox.square(
-              dimension: 20,
-              child: ColoredBox(color: item.color),
-            ),
-            title: Text('ItemId: ${item.id}'),
-          );
-        },
-        items: items,
+      return CustomScrollView(
+        slivers: [
+          SliverAnimatedListView(
+            itemsNotifier: itemsNotifier,
+            eventController: eventController,
+            idMapper: (object) => object.id.toString(),
+            itemBuilder: (item) {
+              return ListTile(
+                leading: SizedBox.square(
+                  dimension: 20,
+                  child: ColoredBox(color: item.color),
+                ),
+                title: Text('ItemId: ${item.id}'),
+              );
+            },
+            items: items,
+          ),
+        ],
       );
     },
   );
