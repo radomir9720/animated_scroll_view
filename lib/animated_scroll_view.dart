@@ -3,9 +3,6 @@
 
 library animated_scroll_view;
 
-// TODO(radomir9720): write docstrings
-// and enable public_member_api_docs rule back
-
 export 'src/animated_scroll_view.dart';
 
 // Event controller
@@ -14,8 +11,10 @@ export 'src/event_controller/default_event_controller.dart';
 
 // models
 export 'src/models/index_range.dart';
+export 'src/models/modificated_item.dart';
 export 'src/models/animation_entity.dart';
 export 'src/models/animation_controller_config.dart';
+export 'src/models/remove_and_insert_animation_configs.dart';
 
 // exceptions
 export 'src/exceptions/animated_scroll_view_exception.dart';
@@ -29,8 +28,8 @@ export 'src/in_memory_animation/static_in_memory_animation.dart';
 export 'src/items_notifier/items_notifier.dart';
 export 'src/items_notifier/default_items_notifier.dart';
 export 'src/items_notifier/mixins/id_mapper_mixin.dart';
-export 'src/items_notifier/mixins/items_build_queue_mixin.dart';
 export 'src/items_notifier/mixins/mounted_widgets_index_range_mixin.dart';
+export 'src/items_notifier/items_entity.dart';
 
 // Items animation controller
 export 'src/items_animation_controller/items_animation_controller.dart';
@@ -57,7 +56,7 @@ export 'src/widgets/pointer_ignorer/pointer_ignorer.dart';
 export 'src/widgets/pointer_ignorer/operation.dart';
 export 'src/widgets/pointer_ignorer/pointer_ignore_condition/pointer_ignore_condition.dart';
 export 'src/widgets/pointer_ignorer/pointer_ignore_condition/operation_pointer_ignore_condition.dart';
-export 'src/widgets/pointer_ignorer/pointer_ignore_condition/always_false_pointer_ignore_condition.dart';
+export 'src/widgets/pointer_ignorer/pointer_ignore_condition/static_pointer_ignore_condition.dart';
 // Scrollables
 export 'src/widgets/scrollables/animated_grid_view.dart';
 export 'src/widgets/scrollables/animated_list_view.dart';

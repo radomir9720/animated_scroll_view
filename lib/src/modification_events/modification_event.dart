@@ -7,8 +7,12 @@ import 'package:flutter/animation.dart';
 /// (i.e. move/add/remove some item of type [T] in/to/from items list)
 /// {@endtemplate}
 abstract class ModificationEvent<T> {
+  /// {@macro modification_event}
   ModificationEvent();
 
+  /// Method, that should contain all the logic of item list
+  /// modifications(inserting, deleting, moving, etc.), and animations, that
+  /// should be executed when an item is deleted/inserted.
   Future<void> execute({
     required TickerProvider vsync,
     required ItemsNotifier<T> itemsNotifier,

@@ -1,11 +1,25 @@
+/// Enum, that lists comparison operations
 enum Operation {
+  /// Equality comparison(==)
   equalsTo,
+
+  /// Less than comparison(<)
   lessThan,
+
+  /// Grater than comparison(>)
   greaterThan,
+
+  /// Less than or equal to comparison(<=)
   lessOrEqualTo,
+
+  /// Greater than or equal to comparison(>=)
   greaterOrEqualTo,
+
+  /// Not equal comparison(!=)
   notEqualsTo;
 
+  /// Pattern matching function by enum value. Executes the corresponding to
+  /// the value callback, and returns the result of it.
   T when<T>({
     required T Function() equalsTo,
     required T Function() lessThan,

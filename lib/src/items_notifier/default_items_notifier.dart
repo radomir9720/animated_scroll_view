@@ -26,15 +26,16 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
   }
 
   @override
+  List<T> get actualList => _itemsEntity.actualItems;
+
+  @override
   void mountedWidgetsIndexRangeChanged(IndexRange newIndexRange) {
-    if (updateMountedWidgetsIndexRange(newIndexRange)) {
-      _notifyIfNeedTo();
-    }
+    if (updateMountedWidgetsIndexRange(newIndexRange)) _notifyIfNeedTo();
   }
 
   @override
   int getIndexById(String itemId) {
-    final index = _itemsEntity.indexWhere(
+    final index = _itemsEntity.actualItems.indexWhere(
       (element) => itemId == idMapper(element),
     );
 
@@ -44,62 +45,96 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
   }
 
   @override
-  T removeAt(int index, {bool forceNotify = true}) {
-    final i = _itemsEntity.removeItemAt(
+  T removeAt(int index, {bool forceNotify = false}) {
+    final result = _itemsEntity.removeItemAt(
       index: index,
       mountedRange: mountedWidgetsIndexRange,
     );
 
-    _onItemsUpdate(forceNotify);
-    return i;
+    _onModifyResult(result, forceNotify: forceNotify);
+    return result.item;
   }
 
   @override
-  T removeById(String itemId, {bool forceNotify = true}) {
-    final item = _itemsEntity.removeItemById(
+  T removeById(String itemId, {bool forceNotify = false}) {
+    final result = _itemsEntity.removeItemById(
       id: itemId,
       mountedRange: mountedWidgetsIndexRange,
     );
-    _onItemsUpdate(forceNotify);
-    return item;
+
+    _onModifyResult(result, forceNotify: forceNotify);
+
+    return result.item;
   }
 
   @override
-  void remove(T item, {bool forceNotify = true}) {
-    _itemsEntity.removeItem(item: item, mountedRange: mountedWidgetsIndexRange);
-    _onItemsUpdate(forceNotify);
+  T markRemovedById(
+    String itemId, {
+    bool forceNotify = false,
+    String? modificationId,
+  }) {
+    final result = _itemsEntity.markRemovedById(
+      itemId,
+      mountedWidgetsIndexRange,
+      modificationId: modificationId,
+    );
+
+    _onModifyResult(result, forceNotify: forceNotify);
+
+    return result.item;
   }
 
   @override
-  void insert(int index, T item, {bool forceNotify = false}) {
-    final displayImmediately = _itemsEntity.insertItem(
+  void remove(T item, {bool forceNotify = false}) {
+    final result = _itemsEntity.removeItem(
+      item: item,
+      mountedRange: mountedWidgetsIndexRange,
+    );
+
+    _onModifyResult(result, forceNotify: forceNotify);
+  }
+
+  @override
+  void insert(
+    int index,
+    T item, {
+    bool forceNotify = false,
+    String? modificationId,
+  }) {
+    final result = _itemsEntity.insertItem(
       index: index,
       element: item,
       mountedRange: mountedWidgetsIndexRange,
+      modificationId: modificationId,
     );
-    _updateActual();
-    _notifyIfNeedTo(forceNotify: forceNotify || displayImmediately);
+
+    _onModifyResult(result, forceNotify: forceNotify);
+  }
+
+  void _onModifyResult(
+    ItemsEntityModificationResult<T> result, {
+    bool forceNotify = false,
+  }) {
+    if (result.actualListChanged) _updateActual();
+    if ((result.visibleItemsChanged || forceNotify) && !_notifying) {
+      // notifyListeners();
+      Future.microtask(notifyListeners);
+    }
   }
 
   @override
-  List<T> get value => _itemsEntity.visibleItems;
+  List<ModificatedItem<T>> get value => _itemsEntity.visibleItems;
 
-  void _updateActual() => onItemsUpdate?.call(_itemsEntity);
+  void _updateActual() => onItemsUpdate?.call(_itemsEntity.actualItems);
 
   void _notifyIfNeedTo({bool forceNotify = false}) {
     if (_notifying) return;
     _notifying = true;
     final notify =
         _itemsEntity.makeVisible(mountedWidgetsIndexRange) || forceNotify;
-
     if (notify) Future.microtask(notifyListeners);
 
     _notifying = false;
-  }
-
-  void _onItemsUpdate(bool notify) {
-    _updateActual();
-    if (notify) notifyListeners();
   }
 
   @override
@@ -107,7 +142,8 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
     if (const DeepCollectionEquality().equals(_itemsEntity, items)) return;
 
     _itemsEntity = ItemsEntity(items);
-    _onItemsUpdate(forceNotify);
+    _updateActual();
+    if (forceNotify && !_notifying) notifyListeners();
   }
 
   @override
