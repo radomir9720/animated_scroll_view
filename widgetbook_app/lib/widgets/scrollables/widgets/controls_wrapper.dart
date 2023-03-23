@@ -11,11 +11,11 @@ class AnimatedScrollViewControlsWrapper extends StatefulWidget {
     Key? key,
     required this.viewBuilder,
     this.itemCount = 50,
-    this.forceNotifyOnMove = false,
+    this.forceNotifyOnMoveAndRemove = false,
   }) : super(key: key);
 
   @protected
-  final bool forceNotifyOnMove;
+  final bool forceNotifyOnMoveAndRemove;
 
   @protected
   final int itemCount;
@@ -147,6 +147,7 @@ class _AnimatedScrollViewControlsWrapper
                     eventController.add(
                       RemoveItemEvent.byId(
                         itemId: value.toString(),
+                        forceNotify: widget.forceNotifyOnMoveAndRemove,
                       ),
                     );
                     modificationNotifier.value =
@@ -162,7 +163,7 @@ class _AnimatedScrollViewControlsWrapper
                       MoveItemEvent.byId(
                         itemId: itemId.toString(),
                         newIndex: newIndex,
-                        forceNotify: widget.forceNotifyOnMove,
+                        forceNotify: widget.forceNotifyOnMoveAndRemove,
                       ),
                     );
                     modificationNotifier.value =

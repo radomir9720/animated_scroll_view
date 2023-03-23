@@ -7,7 +7,7 @@ import 'package:widgetbook_app/widgets/scrollables/widgets/controls_wrapper.dart
 Widget buildAnimatedPageView(BuildContext context) {
   return AnimatedScrollViewControlsWrapper(
     itemCount: 5,
-    forceNotifyOnMove: true,
+    forceNotifyOnMoveAndRemove: true,
     viewBuilder: (itemsNotifier, eventController, items) {
       return AnimatedPageView(
         items: items,
