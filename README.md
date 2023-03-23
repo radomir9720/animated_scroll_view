@@ -5,6 +5,9 @@
 
 Scrollable widget, which lets you easily animate its items list modifications(insert, remove, move, etc.).
 
+## **Disclaimer**
+_Be careful using this package in production because there are still many untested cases. Also GridView and PageView are not very useful yet._
+
 ## **[LIVE DEMO](https://radomir9720.github.io/animated_scroll_view/#/)**
 _Examples(from live demo) can be found [here][live_demo_examples_link].
 Real application examples can be found [here][real_app_example_link1] and [here][real_app_example_link2]_
@@ -41,11 +44,11 @@ Also, you can extend `AnimatedScrollView`, and create your own
 implementation, using the API of this package.
 
 ## TODO:
- - [ ] Simultaneously removing and inserting item when moving([#35618](https://github.com/flutter/flutter/issues/35618))
- - [ ] Write documentation
+ - [x] Simultaneously removing and inserting item when moving([#35618](https://github.com/flutter/flutter/issues/35618))
+ - [x] Write documentation
  - [ ] For `GridView` and `PageView`: animate items, rebuild of which is caused by another items modification event
- - [ ] [Set default axis](https://github.com/flutter/flutter/issues/100931) for `SizeAndFadeTransition` to axis of the scrollable
- - [ ] Write tests
+ - [ ] Set default axis for `SizeAndFadeTransition` to axis of the scrollable([#100931](https://github.com/flutter/flutter/issues/100931))
+ - [ ] Cover all code with tests
  - [x] AnimatedPageView([#58959](https://github.com/flutter/flutter/issues/58959))?
  - [X] Wrap ItemWidget in `SizedAndFadeTransition` and `PointerIgnorer` by default?
  - [x] Widgetbook with live demo examples
