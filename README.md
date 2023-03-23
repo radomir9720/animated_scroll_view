@@ -59,7 +59,7 @@ Add `animated_scroll_view` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  animated_scroll_view: ^0.4.0
+  animated_scroll_view: ^0.5.0
 ```
 
 Install it:
