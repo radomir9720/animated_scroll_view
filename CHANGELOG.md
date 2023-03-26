@@ -1,3 +1,11 @@
+# 0.5.0
+
+* chore: new `DefaultItemsNotifier` logic(fixes found issues)
+* docs: document all public members
+* feat: added extensions on `EventController` for easily adding new events
+* test: added some tests for `AnimatedListView`
+* fix(widgetbook): wrap SliverAnimatedLListView in CustomScrollView
+  
 # 0.4.0
 
 * feat: added AnimatedPageView widget

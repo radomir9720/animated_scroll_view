@@ -6,6 +6,7 @@ import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:animated_scroll_view/src/widgets/animated_item/animated_item_widget.dart';
 import 'package:flutter/widgets.dart';
 
+/// `Animation<double>`
 typedef DoubleAnimation = Animation<double>;
 
 /// Intended to be passed to [SliverChildDelegate.didFinishLayout]
@@ -158,6 +159,7 @@ class AnimatedScrollView<T> extends StatefulWidget {
   @protected
   final ItemsNotifier<T>? itemsNotifier;
 
+  /// {@macro items_animation_controller}
   @protected
   final ItemsAnimationController<DoubleAnimation>? itemsAnimationController;
 
@@ -214,21 +216,21 @@ class _AnimatedScrollViewState<T> extends State<AnimatedScrollView<T>>
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<List<T>>(
+    return ValueListenableBuilder<List<ModificatedItem<T>>>(
       valueListenable: itemsNotifier,
       builder: (context, items, child) {
         return widget.scrollableBuilder(
           items.length,
           (context, index) {
             final item = items[index];
-            final id = widget.idMapper(item);
-            final child = widget.itemBuilder(item);
+            final id = widget.idMapper(item.value);
+            final child = widget.itemBuilder(item.value);
 
             return AnimatedItemWidget(
               key: ValueKey(id),
               id: id,
-              index: index,
-              builder: (animation) {
+              modificationId: item.modificationId,
+              buildWithAnimationCallback: (animation) {
                 return widget.itemWrapper?.call(animation, child) ??
                     SizeAndFadeTransition(
                       animation: animation,

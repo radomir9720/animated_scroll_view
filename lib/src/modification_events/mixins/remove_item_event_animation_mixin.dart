@@ -1,34 +1,50 @@
 import 'package:animated_scroll_view/animated_scroll_view.dart';
+import 'package:animated_scroll_view/src/models/modification.dart';
 import 'package:flutter/animation.dart';
 
+/// Mixin, which keeps common item deletion logic
+///
+/// Uses also [AnimationControllerMixin]
 mixin RemoveItemEventAnimationMixin<T> on AnimationControllerMixin<T> {
-  Future<void> runRemoveAnimation({
-    required TickerProvider vsync,
+  /// Instantiates an animation, runs it, and disposes on execution end
+  T generateRemoveAnimation({
     required AnimationControllerConfig removeAnimationConfig,
     required ItemsAnimationController itemsAnimationController,
+    required ItemsNotifier<T> itemsNotifier,
     required String itemId,
-    void Function()? onAnimationEnd,
-  }) async {
-    final animationController = getAnimation(
-      vsync,
-      config: removeAnimationConfig,
-    );
+    bool forceNotify = false,
+  }) {
+    final modificationId = Modification.remove.interpolate(itemId);
 
-    itemsAnimationController.add(
-      AnimationEntity(
-        itemId: itemId,
-        animation: animationController,
-      ),
-    );
+    itemsAnimationController.cachedAnimationValue[modificationId] =
+        removeAnimationConfig.uppedBound;
 
-    return animationController.reverse().then(
-      (value) {
-        itemsAnimationController.cachedAnimationValue[itemId] =
-            removeAnimationConfig.lowerBound;
-
-        dispose();
-        onAnimationEnd?.call();
+    final delayedAnimation = DelayedInMemoryAnimation<AnimationController>(
+      createAnimationCallback: (vsync) {
+        return getAnimation(
+          vsync,
+          config: removeAnimationConfig,
+        );
       },
+      runCallback: (animation) {
+        itemsAnimationController.cachedAnimationValue[modificationId] =
+            removeAnimationConfig.lowerBound;
+        return animation.reverse();
+      },
+      disposeCallback: (animation) {
+        animation
+          ..stop()
+          ..dispose();
+        itemsNotifier.removeById(itemId, forceNotify: forceNotify);
+      },
+    );
+
+    itemsAnimationController.inMemoryAnimationMap[modificationId] =
+        delayedAnimation;
+
+    return itemsNotifier.markRemovedById(
+      itemId,
+      modificationId: modificationId,
     );
   }
 }

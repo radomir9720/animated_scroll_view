@@ -1,10 +1,9 @@
 name: animated_scroll_view
-description: Scrollable widgets, that helps you easily animate items deleting, inserting, moving etc.
-repository: https://github.com/radomir9720/animated_scroll_view
+description: Scrollable widgets, that helps you easily animate items removing, inserting, moving etc.
+repository: https://github.com/radomir9720/animated_scroll_view  
+homepage: https://github.com/radomir9720/animated_scroll_view
 
-publish_to: "none"
-
-version: 0.4.0
+version: 0.5.0
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -21,4 +20,5 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mocktail: ^0.3.0
+  dart_code_metrics: ^4.19.2
   very_good_analysis: ^3.1.0

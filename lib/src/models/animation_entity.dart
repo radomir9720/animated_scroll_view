@@ -1,11 +1,17 @@
 import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/widgets.dart';
 
+/// Model, which contains the [animation], and [itemId](id of the item
+/// for which this animation is intended).
 @immutable
 class AnimationEntity<A extends DoubleAnimation> {
+  /// Creates an [AnimationEntity]
   const AnimationEntity({required this.itemId, required this.animation});
 
+  /// The item's id
   final String itemId;
+
+  /// Animation
   final A animation;
 
   @override

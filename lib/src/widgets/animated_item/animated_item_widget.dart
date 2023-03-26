@@ -3,30 +3,46 @@ import 'dart:async';
 import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/widgets.dart';
 
+/// {@template animated_item_widget.build_with_animation_callback}
+/// Builds a widget using given [animation] and returns it
+/// {@endtemplate}
+typedef BuildWithAnimationCallback = Widget Function(DoubleAnimation animation);
+
+/// {@template animated_item_widget}
+/// Widget, that keeps the state of an item.
+///
+/// Manages animations logic.
+/// {@endtemplate}
 class AnimatedItemWidget<T> extends StatefulWidget {
+  /// Creates an [AnimatedItemWidget]
   const AnimatedItemWidget({
     super.key,
     required this.id,
-    required this.index,
-    required this.builder,
     required this.itemsNotifier,
     required this.itemsAnimationController,
+    required this.buildWithAnimationCallback,
+    this.modificationId,
   });
 
+  /// Item's id
   @protected
   final String id;
 
+  /// {@macro items_notifier.modification_id}
   @protected
-  final int index;
+  final String? modificationId;
 
+  /// {@macro items_notifier}
   @protected
   final ItemsNotifier<T> itemsNotifier;
 
+  /// {@macro items_animation_controller}
   @protected
   final ItemsAnimationController itemsAnimationController;
 
+  /// {@macro animated_item_widget.build_with_animation_callback}
   @protected
-  final Widget Function(DoubleAnimation animation) builder;
+  final BuildWithAnimationCallback buildWithAnimationCallback;
 
   @override
   State<AnimatedItemWidget<T>> createState() => _AnimatedItemWidgetState<T>();
@@ -50,23 +66,21 @@ class _AnimatedItemWidgetState<T> extends State<AnimatedItemWidget<T>>
   }
 
   Future<void> _runAnimation() async {
-    final cached =
-        widget.itemsAnimationController.cachedAnimationValue[widget.id];
+    final cached = widget
+        .itemsAnimationController.cachedAnimationValue[widget.modificationId];
     if (cached != null) cachedAnimationValue = AlwaysStoppedAnimation(cached);
 
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
         if (!mounted) return;
-        final animation =
-            widget.itemsAnimationController.inMemoryAnimationMap[widget.id];
+
+        final animation = widget.itemsAnimationController
+            .inMemoryAnimationMap[widget.modificationId];
 
         if (animation == null) return;
 
-        final itemIndex = widget.itemsNotifier.getIndexById(widget.id);
-
-        if (itemIndex != widget.index) return;
-
-        widget.itemsAnimationController.inMemoryAnimationMap.remove(widget.id);
+        widget.itemsAnimationController.inMemoryAnimationMap
+            .remove(widget.modificationId);
 
         animation.init(this);
 
@@ -91,12 +105,12 @@ class _AnimatedItemWidgetState<T> extends State<AnimatedItemWidget<T>>
       stream: widget.itemsAnimationController
           .where((event) => widget.id == event.itemId),
       builder: (context, snapshot) {
-        return widget.builder(
-          snapshot.data?.animation ??
-              inMemoryAnimation?.animation ??
-              cachedAnimationValue ??
-              kAlwaysCompleteAnimation,
-        );
+        final animation = snapshot.data?.animation ??
+            inMemoryAnimation?.animation ??
+            cachedAnimationValue ??
+            kAlwaysCompleteAnimation;
+
+        return widget.buildWithAnimationCallback(animation);
       },
     );
   }

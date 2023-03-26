@@ -36,7 +36,7 @@ class AnimatedListView<T> extends AnimatedScrollView<T> {
     bool addSemanticIndexes = true,
     bool addRepaintBoundaries = true,
     bool addAutomaticKeepAlives = true,
-    int? Function(Key)? findChildIndexCallback,
+    ChildIndexGetter? findChildIndexCallback,
   }) : super(
           scrollableBuilder: (
             itemCount,

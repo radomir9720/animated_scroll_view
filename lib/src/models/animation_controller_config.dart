@@ -1,8 +1,14 @@
 import 'package:flutter/animation.dart';
 import 'package:meta/meta.dart';
 
+/// {@template animation_controller_config}
+/// Model, which contains animation settings.
+///
+/// This config is meant to be used with [AnimationController]
+/// {@endtemplate}
 @immutable
 class AnimationControllerConfig {
+  /// {@macro animation_controller_config}
   const AnimationControllerConfig({
     this.lowerBound = 0,
     this.uppedBound = 1,
@@ -10,17 +16,28 @@ class AnimationControllerConfig {
     this.initialValue = 1,
     this.duration = const Duration(milliseconds: 200),
     this.reverseDuration,
-    this.postframeCallback,
   });
 
+  ///  See [AnimationController.lowerBound]
   final double lowerBound;
-  final double uppedBound;
-  final AnimationBehavior behavior;
-  final double initialValue;
-  final Duration duration;
-  final Duration? reverseDuration;
-  final void Function(AnimationController controller)? postframeCallback;
 
+  ///  See [AnimationController.upperBound]
+  final double uppedBound;
+
+  ///  See [AnimationController.animationBehavior]
+  final AnimationBehavior behavior;
+
+  ///  See [AnimationController.value]
+  final double initialValue;
+
+  ///  See [AnimationController.duration]
+  final Duration duration;
+
+  ///  See [AnimationController.reverseDuration]
+  final Duration? reverseDuration;
+
+  /// Returuns a copy of current instance, and replaces its parameters by
+  /// provided ones.
   AnimationControllerConfig copyWith({
     double? lowerBound,
     double? uppedBound,
@@ -28,7 +45,6 @@ class AnimationControllerConfig {
     double? initialValue,
     Duration? duration,
     Duration? reverseDuration,
-    void Function(AnimationController controller)? postframeCallback,
   }) {
     return AnimationControllerConfig(
       lowerBound: lowerBound ?? this.lowerBound,
@@ -37,7 +53,6 @@ class AnimationControllerConfig {
       initialValue: initialValue ?? this.initialValue,
       duration: duration ?? this.duration,
       reverseDuration: reverseDuration ?? this.reverseDuration,
-      postframeCallback: postframeCallback ?? this.postframeCallback,
     );
   }
 
@@ -51,8 +66,7 @@ class AnimationControllerConfig {
         other.behavior == behavior &&
         other.initialValue == initialValue &&
         other.duration == duration &&
-        other.reverseDuration == reverseDuration &&
-        other.postframeCallback == postframeCallback;
+        other.reverseDuration == reverseDuration;
   }
 
   @override
@@ -62,8 +76,7 @@ class AnimationControllerConfig {
         behavior.hashCode ^
         initialValue.hashCode ^
         duration.hashCode ^
-        reverseDuration.hashCode ^
-        postframeCallback.hashCode;
+        reverseDuration.hashCode;
   }
 
   @override
@@ -73,7 +86,6 @@ class AnimationControllerConfig {
         'behavior: $behavior,\n'
         'initialValue: $initialValue,\n'
         'duration: $duration,\n'
-        'reverseDuration: $reverseDuration,\n'
-        'postframeCallback: $postframeCallback)';
+        'reverseDuration: $reverseDuration)';
   }
 }

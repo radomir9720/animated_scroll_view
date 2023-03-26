@@ -7,7 +7,7 @@ import 'package:widgetbook_app/widgets/scrollables/widgets/controls_wrapper.dart
 @WidgetbookUseCase(name: 'Default', type: AnimatedGridView)
 Widget buildAnimatedGridView(BuildContext context) {
   return AnimatedScrollViewControlsWrapper(
-    forceNotifyOnMove: true,
+    forceNotifyOnMoveAndRemove: true,
     viewBuilder: (itemsNotifier, eventController, items) {
       return AnimatedGridView<MyModel>(
         itemsNotifier: itemsNotifier,

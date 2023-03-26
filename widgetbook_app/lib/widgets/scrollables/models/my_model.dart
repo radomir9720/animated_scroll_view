@@ -14,4 +14,14 @@ class MyModel {
 
   @override
   String toString() => 'MyModel(color: $color, id: $id)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is MyModel && other.color == color && other.id == id;
+  }
+
+  @override
+  int get hashCode => color.hashCode ^ id.hashCode;
 }

@@ -6,6 +6,7 @@ import 'package:widgetbook_app/widgets/scrollables/widgets/controls_wrapper.dart
 @WidgetbookUseCase(name: 'Default', type: SliverAnimatedGridView)
 Widget buildSliverAnimatedGridView(BuildContext context) {
   return AnimatedScrollViewControlsWrapper(
+    forceNotifyOnMoveAndRemove: true,
     viewBuilder: (itemsNotifier, eventController, items) {
       return CustomScrollView(
         slivers: [
