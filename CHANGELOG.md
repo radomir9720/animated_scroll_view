@@ -1,3 +1,7 @@
+# 0.5.1
+* fix: `idMapper` not assigned to `ItemsEntity` after calling `ItemsNotifier.updateValue()`
+* fix: item not marked as removed on move event when index did not changed
+
 # 0.5.0
 
 * chore: new `DefaultItemsNotifier` logic(fixes found issues)
