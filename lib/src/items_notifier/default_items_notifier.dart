@@ -142,6 +142,7 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
     if (const DeepCollectionEquality().equals(_itemsEntity, items)) return;
 
     _itemsEntity = ItemsEntity(items);
+    if (mapperIsPresent) _itemsEntity.idMapper = idMapper;
     _updateActual();
     if (forceNotify && !_notifying) notifyListeners();
   }

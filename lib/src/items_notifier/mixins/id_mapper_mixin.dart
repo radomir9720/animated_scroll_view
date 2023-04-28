@@ -13,6 +13,10 @@ mixin IDMapperMixin<T> {
     return mapper;
   }
 
+  /// Returns `true` if mapper was already initialized.
+  /// Otherwise - `false`
+  bool get mapperIsPresent => _idMapper != null;
+
   /// Sets the [IDMapper] callback
   set idMapper(IDMapper<T> idMapper) {
     _idMapper = idMapper;

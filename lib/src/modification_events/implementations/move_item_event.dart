@@ -89,9 +89,11 @@ class MoveItemEvent<T> extends ModificationEventWithItemAndItemIdConstructors<T>
       if (newItem != null) {
         if (newItem != itemsNotifier.value[currentIndex]) {
           itemsNotifier
+            ..markRemovedById(itemId)
             ..removeAt(currentIndex)
             ..insert(currentIndex, newItem);
         }
+        return;
       }
       throw ItemNotFoundException(itemId);
     }

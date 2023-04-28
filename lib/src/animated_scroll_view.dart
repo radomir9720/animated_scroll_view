@@ -179,8 +179,8 @@ class _AnimatedScrollViewState<T> extends State<AnimatedScrollView<T>>
         widget.itemsAnimationController ?? DefaultItemsAnimationController();
     itemsNotifier = widget.itemsNotifier ?? DefaultItemsNotifier();
     itemsNotifier
-      ..updateValue(widget.items)
-      ..idMapper = widget.idMapper;
+      ..idMapper = widget.idMapper
+      ..updateValue(widget.items);
 
     itemsEventSubscription = widget.eventController.listen(onNewItemsEvent);
     super.initState();
