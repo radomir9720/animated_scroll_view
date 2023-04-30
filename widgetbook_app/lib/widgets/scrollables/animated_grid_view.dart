@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 import 'package:widgetbook_app/widgets/scrollables/models/my_model.dart';
 import 'package:widgetbook_app/widgets/scrollables/widgets/controls_wrapper.dart';
+import 'package:widgetbook_app/utils/knobs.dart';
 
 @WidgetbookUseCase(name: 'Default', type: AnimatedGridView)
 Widget buildAnimatedGridView(BuildContext context) {
@@ -10,6 +11,7 @@ Widget buildAnimatedGridView(BuildContext context) {
     forceNotifyOnMoveAndRemove: true,
     viewBuilder: (itemsNotifier, eventController, items) {
       return AnimatedGridView<MyModel>(
+        scrollDirection: context.axis,
         itemsNotifier: itemsNotifier,
         eventController: eventController,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -20,7 +22,12 @@ Widget buildAnimatedGridView(BuildContext context) {
         itemBuilder: (item) {
           return ColoredBox(
             color: item.color,
-            child: Center(child: Text('ItemId: ${item.id}')),
+            child: Center(
+              child: Text(
+                'ItemId: ${item.id}',
+                textAlign: TextAlign.center,
+              ),
+            ),
           );
         },
         items: items,

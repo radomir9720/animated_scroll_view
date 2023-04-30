@@ -2,6 +2,7 @@ import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/widgets.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 import 'package:widgetbook_app/widgets/scrollables/widgets/controls_wrapper.dart';
+import 'package:widgetbook_app/utils/knobs.dart';
 
 @WidgetbookUseCase(name: 'Default', type: AnimatedPageView)
 Widget buildAnimatedPageView(BuildContext context) {
@@ -11,6 +12,7 @@ Widget buildAnimatedPageView(BuildContext context) {
     viewBuilder: (itemsNotifier, eventController, items) {
       return AnimatedPageView(
         items: items,
+        scrollDirection: context.axis,
         itemsNotifier: itemsNotifier,
         eventController: eventController,
         idMapper: (object) => object.id.toString(),

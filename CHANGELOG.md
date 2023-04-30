@@ -1,3 +1,7 @@
+# 0.5.2
+* feat: determine the axis of SizeTransition under the hood
+* feat(widgetbook): added axis knob for all scrollable widgets
+
 # 0.5.1
 * fix: `idMapper` not assigned to `ItemsEntity` after calling `ItemsNotifier.updateValue()`
 * fix: item not marked as removed on move event when index did not changed

@@ -13,7 +13,7 @@ class SizeAndFadeTransition extends StatelessWidget {
     super.key,
     required this.child,
     required this.animation,
-    this.sizeTransitionAxis = Axis.vertical,
+    this.sizeTransitionAxis,
     this.sizeTransitionAxisAlignment = 0,
   });
 
@@ -29,8 +29,20 @@ class SizeAndFadeTransition extends StatelessWidget {
 
   /// [Axis.horizontal] if [SizeTransition.sizeFactor] modifies the width,
   /// otherwise [Axis.vertical].
+  ///
+  /// This parameter is optional because if the axis was not specified
+  /// explicitly, it will be determined under the hood
+  /// by [Scrollable.of(context).axisDirection].
+  ///
+  /// If the axis was not passed explicitly, and
+  /// [Scrollable.of(context)?.axisDirection], for some reason, returns `null`,
+  /// then [kDefaultTransitionAxis] is used.
   @protected
-  final Axis sizeTransitionAxis;
+  final Axis? sizeTransitionAxis;
+
+  /// Default size transition axis, which is used when the axis is not specified
+  /// explicitly, and [Scrollable.of(context).axisDirection] returns `null`.
+  static const kDefaultTransitionAxis = Axis.vertical;
 
   /// Describes how to align the child along the axis that
   /// [SizeTransition.sizeFactor] is modifying.
@@ -41,9 +53,13 @@ class SizeAndFadeTransition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final axisDirection = Scrollable.of(context)?.axisDirection;
+    final axis =
+        axisDirection == null ? null : axisDirectionToAxis(axisDirection);
+
     return SizeTransition(
       sizeFactor: animation,
-      axis: sizeTransitionAxis,
+      axis: sizeTransitionAxis ?? axis ?? kDefaultTransitionAxis,
       axisAlignment: sizeTransitionAxisAlignment,
       child: FadeTransition(
         opacity: animation,

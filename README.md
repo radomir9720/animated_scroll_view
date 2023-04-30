@@ -44,22 +44,31 @@ Also, you can extend `AnimatedScrollView`, and create your own
 implementation, using the API of this package.
 
 ## TODO:
- - [x] Simultaneously removing and inserting item when moving([#35618](https://github.com/flutter/flutter/issues/35618))
- - [x] Write documentation
- - [ ] For `GridView` and `PageView`: animate items, rebuild of which is caused by another items modification event
- - [ ] Set default axis for `SizeAndFadeTransition` to axis of the scrollable([#100931](https://github.com/flutter/flutter/issues/100931))
- - [ ] Cover all code with tests
- - [x] AnimatedPageView([#58959](https://github.com/flutter/flutter/issues/58959))?
- - [X] Wrap ItemWidget in `SizedAndFadeTransition` and `PointerIgnorer` by default?
- - [x] Widgetbook with live demo examples
+
+Status  |Task Name
+:------:|----
+✅|Simultaneously removing and inserting item when moving([#35618](https://github.com/flutter/flutter/issues/35618))
+✅|Write documentation
+⬜|For `GridView` and `PageView`: animate items, rebuild of which is caused by another items modification event
+✅|Set default axis for `SizeAndFadeTransition` to axis of the scrollable[#100931](https://github.com/flutter/flutter/issues/100931#issuecomment-1120515790)
+⬜|Cover all code with tests
+✅|AnimatedPageView([#58959](https://github.com/flutter/flutter/issues/58959))?
+✅|Wrap ItemWidget in `SizedAndFadeTransition` and `PointerIgnorer` by default?
+✅|Widgetbook with live demo examples
 
 ## Installation 💻
 
 Add `animated_scroll_view` to your `pubspec.yaml`:
 
+```
+flutter pub add animated_scroll_view
+```
+
+or manually:
+
 ```yaml
 dependencies:
-  animated_scroll_view: ^0.5.0
+  animated_scroll_view: ^<latest version>
 ```
 
 Install it:
