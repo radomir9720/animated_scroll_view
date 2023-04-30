@@ -11,4 +11,20 @@ extension KnobsExtension on BuildContext {
       description: description,
     );
   }
+
+  Axis get axis {
+    return knobs.options<Axis>(
+      label: 'Axis',
+      options: const [
+        Option(
+          label: 'Vertical',
+          value: Axis.vertical,
+        ),
+        Option(
+          label: 'Horizontal',
+          value: Axis.horizontal,
+        ),
+      ],
+    );
+  }
 }
