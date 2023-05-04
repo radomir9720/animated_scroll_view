@@ -4,18 +4,17 @@ import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/animation.dart';
 import 'package:meta/meta.dart';
 
-/// {@template move_item_event.animation_configs_builder}
-/// Callback, which builds a [RemoveAndInsertAnimationConfigs]
-/// using given `currentIndex`
-/// {@endtemplate}
-typedef AnimationConfigsBuilder = RemoveAndInsertAnimationConfigs Function(
-  int currentIndex,
-);
-
-/// {@template move_item_event}
-/// Implements move logic of the [item]. Manages remove and insert animations.
+/// {@template move_influenced_item_event}
+/// {@macro move_item_event}
 ///
-/// Descendant of [ModificationEventWithItemAndItemIdConstructors].
+/// Differs from [MoveItemEvent] in that, in addition to moving the [item] with
+/// animation, it also animates the items, that are affected by this
+/// insertion.
+///
+/// Namely, it removes with animation all the items, index of which is between
+/// the current index and the new index, and then
+/// inserts(with animation, of course)
+/// them back, preliminarily moving the [item] to the proper index.
 /// {@endtemplate}
 ///
 /// See also:
@@ -26,16 +25,14 @@ typedef AnimationConfigsBuilder = RemoveAndInsertAnimationConfigs Function(
 ///  * [RemoveItemEvent]
 ///  * [RemoveInfluencedItemEvent]
 ///  * [RemoveAdaptiveItemEvent]
-///  * [MoveInfluencedItemEvent]
+///  * [MoveItemEvent]
 ///  * [MoveAdaptiveItemEvent]
 ///  * [CustomModificationEventWrapper]
-class MoveItemEvent<T> extends ModificationEventWithItemAndItemIdConstructors<T>
-    with
-        AnimationControllerMixin,
-        CheckInsertIndexIsValidMixin,
-        RemoveItemEventAnimationMixin {
-  /// Creates a [MoveItemEvent] using an [item] instance.
-  MoveItemEvent({
+class MoveInfluencedItemEvent<T>
+    extends ModificationEventWithItemAndItemIdConstructors<T>
+    with AnimationControllerMixin, CheckInsertIndexIsValidMixin {
+  /// Creates a [MoveInfluencedItemEvent] using an [item] instance.
+  MoveInfluencedItemEvent({
     required T item,
     required this.newIndex,
     this.animateWhenIndexDidNotChanged = false,
@@ -43,8 +40,8 @@ class MoveItemEvent<T> extends ModificationEventWithItemAndItemIdConstructors<T>
     this.forceNotify = false,
   }) : super(item);
 
-  /// Creates a [MoveItemEvent] using an item's id
-  MoveItemEvent.byId({
+  /// Creates a [MoveInfluencedItemEvent] using an item's id
+  MoveInfluencedItemEvent.byId({
     required String itemId,
     required this.newIndex,
     this.animateWhenIndexDidNotChanged = false,
@@ -118,17 +115,52 @@ class MoveItemEvent<T> extends ModificationEventWithItemAndItemIdConstructors<T>
     final animationConfigs = animationConfigsBuilder?.call(currentIndex) ??
         const RemoveAndInsertAnimationConfigs();
 
-    final current = generateRemoveAnimation(
-      itemId: itemId,
-      itemsNotifier: itemsNotifier,
-      removeAnimationConfig: animationConfigs.remove,
-      itemsAnimationController: itemsAnimationController,
+    final mounted = itemsNotifier.mountedWidgetsIndexRange;
+
+    final influencedRange = IndexRange(
+      start: currentIndex < newIndex ? currentIndex : newIndex,
+      end: newIndex > currentIndex ? newIndex : currentIndex,
+    );
+    final intersection = mounted.getIntersection(influencedRange);
+
+    final removeAnimationConfig = animationConfigs.remove;
+
+    final intersectionList = intersection == null
+        ? <T>[]
+        : itemsNotifier.actualList
+            .sublist(intersection.start, intersection.end + 1);
+
+    if (intersectionList.isNotEmpty) {
+      final animation = getAnimation(
+        vsync,
+        config: removeAnimationConfig,
+      );
+      for (final item in intersectionList) {
+        itemsAnimationController.add(
+          AnimationEntity(
+            itemId: itemsNotifier.idMapper(item),
+            animation: animation,
+          ),
+        );
+      }
+
+      await animation.reverse();
+    }
+
+    final items = itemsNotifier.removeRangeInstantly(
+      influencedRange.start,
+      influencedRange.end + 1,
     );
 
     eventController.add(
-      InsertItemEvent(
-        index: _newIndex,
-        item: item ?? current,
+      InsertAllItemsEvent(
+        index: influencedRange.start,
+        forceVisible: true,
+        items: items.length <= 1
+            ? items
+            : _newIndex < currentIndex
+                ? items.moveLastToStart
+                : items.moveFirstToEnd,
         forceNotify: forceNotify,
         animationConfig: animationConfigs.insert,
       ),
@@ -136,16 +168,32 @@ class MoveItemEvent<T> extends ModificationEventWithItemAndItemIdConstructors<T>
   }
 }
 
+extension _MoveToExtension<T> on List<T> {
+  List<T> get moveLastToStart {
+    return [
+      last,
+      ...sublist(0, length - 1),
+    ];
+  }
+
+  List<T> get moveFirstToEnd {
+    return [
+      ...sublist(1),
+      first,
+    ];
+  }
+}
+
 /// Extension on [EventController], that provides simplier and more declarative
-/// way to add to event controller an [MoveItemEvent]
-extension MoveItemEventExtension<T> on EventController<T> {
-  /// Adds a [MoveItemEvent] to [EventController]
+/// way to add to event controller an [MoveInfluencedItemEvent]
+extension MoveInfluencedItemEventExtension<T> on EventController<T> {
+  /// Adds a [MoveInfluencedItemEvent] to [EventController]
   ///
   /// Completely equivalent to
   /// ```dart
-  /// eventController.add(MoveItemEvent(...))
+  /// eventController.add(MoveInfluencedItemEvent(...))
   /// ```
-  void move({
+  void moveInfluenced({
     required T item,
     required int newIndex,
     bool forceNotify = false,
@@ -153,7 +201,7 @@ extension MoveItemEventExtension<T> on EventController<T> {
     AnimationConfigsBuilder? animationConfigsBuilder,
   }) {
     return add(
-      MoveItemEvent(
+      MoveInfluencedItemEvent(
         item: item,
         newIndex: newIndex,
         forceNotify: forceNotify,
@@ -163,13 +211,13 @@ extension MoveItemEventExtension<T> on EventController<T> {
     );
   }
 
-  /// Adds a [MoveItemEvent] to [EventController]
+  /// Adds a [MoveInfluencedItemEvent] to [EventController]
   ///
   /// Completely equivalent to
   /// ```dart
-  /// eventController.add(MoveItemEvent.byId(...))
+  /// eventController.add(MoveInfluencedItemEvent.byId(...))
   /// ```
-  void moveById({
+  void moveInfluencedById({
     required String itemId,
     required int newIndex,
     bool forceNotify = false,
@@ -177,7 +225,7 @@ extension MoveItemEventExtension<T> on EventController<T> {
     AnimationConfigsBuilder? animationConfigsBuilder,
   }) {
     return add(
-      MoveItemEvent.byId(
+      MoveInfluencedItemEvent.byId(
         itemId: itemId,
         newIndex: newIndex,
         forceNotify: forceNotify,

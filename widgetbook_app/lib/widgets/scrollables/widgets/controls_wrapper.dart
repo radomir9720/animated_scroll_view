@@ -125,7 +125,7 @@ class _AnimatedScrollViewControlsWrapper
                   onButtonPressed: (value) {
                     final length = itemsNotifier.value.length;
                     eventController.add(
-                      InsertItemEvent(
+                      InsertAdaptiveItemEvent(
                         item: MyModel(
                           id: ++biggestIndex,
                           color: Colors
@@ -145,7 +145,7 @@ class _AnimatedScrollViewControlsWrapper
                   onButtonPressed: (value) {
                     if (!checkItemIdExists(value)) return;
                     eventController.add(
-                      RemoveItemEvent.byId(
+                      RemoveAdaptiveItemEvent.byId(
                         itemId: value.toString(),
                         forceNotify: widget.forceNotifyOnMoveAndRemove,
                       ),
@@ -160,7 +160,7 @@ class _AnimatedScrollViewControlsWrapper
                   onPressed: (itemId, newIndex) {
                     if (!checkItemIdExists(itemId)) return;
                     eventController.add(
-                      MoveItemEvent.byId(
+                      MoveAdaptiveItemEvent.byId(
                         itemId: itemId.toString(),
                         newIndex: newIndex,
                         forceNotify: widget.forceNotifyOnMoveAndRemove,

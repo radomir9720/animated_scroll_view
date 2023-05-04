@@ -26,6 +26,18 @@ class IndexRange {
     return index >= start && index <= end;
   }
 
+  /// Returns the intersection of this range and the [other].
+  ///
+  /// Returns `null` ff the ranges has no intersection.
+  IndexRange? getIntersection(IndexRange other) {
+    if (other.start > end) return null;
+    if (other.end < start) return null;
+    return IndexRange(
+      start: other.start > start ? other.start : start,
+      end: other.end < end ? other.end : end,
+    );
+  }
+
   /// Returns a copy of current range, and replaces current [start] and [end]
   /// parameters with the passed ones.
   IndexRange copyWith({

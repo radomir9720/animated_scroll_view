@@ -68,6 +68,19 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
   }
 
   @override
+  List<T> removeRangeInstantly(int start, int end, {bool forceNotify = false}) {
+    final result = _itemsEntity.removeRangeInstantlyById(
+      start,
+      end,
+      mountedWidgetsIndexRange,
+    );
+
+    _onModifyResult(result, forceNotify: forceNotify);
+
+    return result.items;
+  }
+
+  @override
   T markRemovedById(
     String itemId, {
     bool forceNotify = false,
@@ -111,13 +124,29 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
     _onModifyResult(result, forceNotify: forceNotify);
   }
 
+  @override
+  void insertAll(
+    int index,
+    List<MapEntry<T, String?>> items, {
+    bool forceNotify = false,
+    bool forceVisible = false,
+  }) {
+    final result = _itemsEntity.insertItems(
+      index: index,
+      elements: items,
+      forceVisible: forceVisible,
+      mountedRange: mountedWidgetsIndexRange,
+    );
+
+    _onModifyResult(result, forceNotify: forceNotify);
+  }
+
   void _onModifyResult(
-    ItemsEntityModificationResult<T> result, {
+    ModificationResult<T> result, {
     bool forceNotify = false,
   }) {
     if (result.actualListChanged) _updateActual();
     if ((result.visibleItemsChanged || forceNotify) && !_notifying) {
-      // notifyListeners();
       Future.microtask(notifyListeners);
     }
   }
