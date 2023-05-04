@@ -10,6 +10,7 @@
   - `MoveAdaptiveItemEvent`
 * **CHORE**: migration to flutter 3.7 small changes
 * **CI**: added workflow which publishes the package to pub.dev
+* **CI**: bump flutter version to 3.7.12
 
 # 0.5.2
 * **FEAT**: determine the axis of SizeTransition under the hood
