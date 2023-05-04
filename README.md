@@ -50,7 +50,7 @@ Status  |Task Name
 ✅|Simultaneously removing and inserting item when moving([#35618](https://github.com/flutter/flutter/issues/35618))
 ✅|Write documentation
 ⬜|For `GridView` and `PageView`: animate items, rebuild of which is caused by another items modification event
-✅|Set default axis for `SizeAndFadeTransition` to axis of the scrollable[#100931](https://github.com/flutter/flutter/issues/100931#issuecomment-1120515790)
+✅|Set default axis for `SizeAndFadeTransition` to axis of the scrollable([#100931](https://github.com/flutter/flutter/issues/100931#issuecomment-1120515790))
 ⬜|Cover all code with tests
 ✅|AnimatedPageView([#58959](https://github.com/flutter/flutter/issues/58959))?
 ✅|Wrap ItemWidget in `SizedAndFadeTransition` and `PointerIgnorer` by default?
