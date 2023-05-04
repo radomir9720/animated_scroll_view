@@ -12,8 +12,15 @@ import 'package:flutter/widgets.dart';
 /// {@endtemplate}
 ///
 /// See also:
+///  * [InsertAllItemsEvent]
+///  * [InsertInfluencedItemEvent]
+///  * [InsertAdaptiveItemEvent]
 ///  * [RemoveItemEvent]
+///  * [RemoveInfluencedItemEvent]
+///  * [RemoveAdaptiveItemEvent]
 ///  * [MoveItemEvent]
+///  * [MoveInfluencedItemEvent]
+///  * [MoveAdaptiveItemEvent]
 ///  * [CustomModificationEventWrapper]
 class InsertItemEvent<T> extends ModificationEvent<T>
     with AnimationControllerMixin, CheckInsertIndexIsValidMixin {
@@ -57,6 +64,7 @@ class InsertItemEvent<T> extends ModificationEvent<T>
     required ItemsNotifier<T> itemsNotifier,
     required EventController<T> eventController,
     required ItemsAnimationController itemsAnimationController,
+    required Type scrollViewType,
   }) async {
     final _index = index ?? itemsNotifier.value.length;
 

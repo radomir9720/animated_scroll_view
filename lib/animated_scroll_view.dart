@@ -42,8 +42,15 @@ export 'src/modification_events/modification_event.dart';
 export 'src/modification_events/item_and_item_id_constructors.dart';
 //
 export 'src/modification_events/implementations/insert_item_event.dart';
+export 'src/modification_events/implementations/insert_adaptive_item_event.dart';
+export 'src/modification_events/implementations/insert_all_items_event.dart';
+export 'src/modification_events/implementations/insert_influenced_item_event.dart';
 export 'src/modification_events/implementations/move_item_event.dart';
+export 'src/modification_events/implementations/move_adaptive_item_event.dart';
+export 'src/modification_events/implementations/move_influenced_item_event.dart';
 export 'src/modification_events/implementations/remove_item_event.dart';
+export 'src/modification_events/implementations/remove_adaptive_item_event.dart';
+export 'src/modification_events/implementations/remove_influenced_item_event.dart';
 export 'src/modification_events/implementations/custom_modification_event_wrapper.dart';
 //
 export 'src/modification_events/mixins/animation_controller_mixin.dart';

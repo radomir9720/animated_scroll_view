@@ -53,7 +53,19 @@ class SizeAndFadeTransition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ignoring lint rule because of broken backward compatibility.
+    // [Scrollable.of] was migrated without saving backward compatibility in
+    // flutter v3.7:
+    // https://github.com/flutter/flutter/pull/114120
+    // https://github.com/flutter/flutter/issues/119499
+    // So the [Scrollable.of] method will work differently on versions below
+    // 3.7 and on >=3.7. On versions >= 3.7 it will throw a [FlutterErrpr]
+    // if there is no [Scrollable] ancestor found. But in our case it is not
+    // a problem, because [SizeAndFadeTrsnsition] widget by default is placed
+    // in a Scrollable.
+    // ignore: invalid_null_aware_operator
     final axisDirection = Scrollable.of(context)?.axisDirection;
+
     final axis =
         axisDirection == null ? null : axisDirectionToAxis(axisDirection);
 

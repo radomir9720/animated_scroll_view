@@ -198,6 +198,7 @@ class _AnimatedScrollViewState<T> extends State<AnimatedScrollView<T>>
       itemsNotifier: itemsNotifier,
       eventController: widget.eventController,
       itemsAnimationController: itemsAnimationController,
+      scrollViewType: widget.runtimeType,
     );
   }
 

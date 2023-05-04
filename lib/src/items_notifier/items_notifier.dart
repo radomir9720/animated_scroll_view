@@ -92,7 +92,7 @@ abstract class ItemsNotifier<T> extends ChangeNotifier
   /// [forceNotify] defaults to `false`.
   void updateValue(List<T> items, {bool forceNotify = false});
 
-  /// Inserts new item at specified index.
+  /// Inserts new item at specified [index].
   ///
   /// {@template items_notifier.force_notify}
   /// If [forceNotify] is `true`,
@@ -113,6 +113,25 @@ abstract class ItemsNotifier<T> extends ChangeNotifier
     String? modificationId,
   });
 
+  /// Inserts a list of items at the specified [index].
+  ///
+  /// {@macro items_notifier.force_notify}
+  ///
+  /// {@macro items_entity.forceVisible}
+  ///
+  /// [forceVisible] defaults to `false`.
+  ///
+  /// [items] is a [MapEntry] list, key of which is the item, value -
+  /// modification ID(optional).
+  ///
+  /// {@macro items_notifier.modification_id}
+  void insertAll(
+    int index,
+    List<MapEntry<T, String?>> items, {
+    bool forceNotify = false,
+    bool forceVisible = false,
+  });
+
   /// Marks an item as removed. It means that in the future is expected to
   /// remove this item from list. It is not removed immediately, because the
   /// remove animation should be executed before remove.
@@ -127,6 +146,17 @@ abstract class ItemsNotifier<T> extends ChangeNotifier
     String itemId, {
     bool forceNotify = false,
     String? modificationId,
+  });
+
+  /// Removes instantly items at the specified range.
+  ///
+  /// Returns removed item list.
+  ///
+  /// {@macro items_notifier.force_notify}
+  List<T> removeRangeInstantly(
+    int start,
+    int end, {
+    bool forceNotify = false,
   });
 
   /// Removes an item at specified index.

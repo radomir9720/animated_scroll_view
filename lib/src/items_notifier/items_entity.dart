@@ -39,9 +39,9 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
   /// This method manages itself whether the item should be displayed
   /// immediately, or later.
   ///
-  /// Returns [ItemsEntityModificationResult], which contains info about the
+  /// Returns [ItemModificationResult], which contains info about the
   /// modification
-  ItemsEntityModificationResult<T> insertItem({
+  ItemModificationResult<T> insertItem({
     required int index,
     required T element,
     required IndexRange mountedRange,
@@ -64,14 +64,69 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
 
     _updateCachedLists();
 
-    return ItemsEntityModificationResult(
+    return ItemModificationResult(
       actualListChanged: true,
       visibleItemsChanged: shouldBeDisplayed,
       item: wrapper.value,
     );
   }
 
-  ItemsEntityModificationResult<T> _removeById(
+  /// Inserts [elements] to the item list.
+  /// This method manages itself whether the items should be displayed
+  /// immediately, or later.
+  ///
+  /// /// [elements] is a [MapEntry] list, key of which is the item, value -
+  /// modification ID(optional).
+  ///
+  /// {@template items_entity.forceVisible}
+  /// If [forceVisible] is `true`, then all items will be marked as "visible"
+  /// immediately, regardless of the underhood logic whether is an item in the
+  /// mounted(visible) range or not.
+  /// {@endtemplate}
+  ///
+  /// Returns [ItemsModificationResult], which contains info about the
+  /// modification
+  ItemsModificationResult<T> insertItems({
+    required int index,
+    required List<MapEntry<T, String?>> elements,
+    required IndexRange mountedRange,
+    bool forceVisible = false,
+  }) {
+    final shouldBeDisplayed =
+        forceVisible || index + elements.length >= mountedRange.start;
+    final wrappers = List.generate(
+      elements.length,
+      (i) {
+        final item = elements[i];
+        final realIndex = index + i;
+        final shouldBeDisplayed = realIndex >= mountedRange.start;
+        return shouldBeDisplayed || forceVisible
+            ? DelayedModificationWrapper.none(
+                item.key,
+                modificationId: item.value,
+              )
+            : DelayedModificationWrapper.insert(
+                item.key,
+                modificationId: item.value,
+              );
+      },
+    );
+
+    super.insertAll(
+      index,
+      wrappers,
+    );
+
+    _updateCachedLists();
+
+    return ItemsModificationResult(
+      actualListChanged: true,
+      visibleItemsChanged: shouldBeDisplayed,
+      items: wrappers.map((e) => e.value).toList(),
+    );
+  }
+
+  ItemModificationResult<T> _removeById(
     String id,
     IndexRange mountedRange,
   ) {
@@ -87,10 +142,32 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
 
     _updateCachedLists();
 
-    return ItemsEntityModificationResult(
+    return ItemModificationResult(
       actualListChanged: false,
       visibleItemsChanged: visibleIndex >= mountedRange.start,
       item: wrapper.value,
+    );
+  }
+
+  /// Removes
+  ItemsModificationResult<T> removeRangeInstantlyById(
+    int start,
+    int end,
+    IndexRange mountedRange,
+  ) {
+    final items = sublist(start, end);
+    super.removeRange(start, end);
+
+    final mountedRemovedItems = mountedRange.getIntersection(
+      IndexRange(start: start, end: end),
+    );
+
+    _updateCachedLists();
+
+    return ItemsModificationResult(
+      actualListChanged: true,
+      visibleItemsChanged: mountedRemovedItems != null,
+      items: items.map((e) => e.value).toList(),
     );
   }
 
@@ -101,7 +178,7 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
   /// in the future. This delayed remove is neccessary because before the item
   /// will be removed, it should animate, and if we will remove the item
   /// instantly, of course, it will be removed without animation.
-  ItemsEntityModificationResult<T> markRemovedById(
+  ItemModificationResult<T> markRemovedById(
     String id,
     IndexRange mountedRange, {
     String? modificationId,
@@ -121,7 +198,7 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
 
       _updateCachedLists();
 
-      return ItemsEntityModificationResult(
+      return ItemModificationResult(
         actualListChanged: true,
         visibleItemsChanged: false,
         item: item,
@@ -135,7 +212,7 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
 
     _updateCachedLists();
 
-    return ItemsEntityModificationResult(
+    return ItemModificationResult(
       actualListChanged: true,
       visibleItemsChanged: visibleIndex >= mountedRange.start,
       item: item,
@@ -144,9 +221,9 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
 
   /// Removes an item by its index.
   ///
-  /// Returns [ItemsEntityModificationResult], which contains info about the
+  /// Returns [ItemModificationResult], which contains info about the
   /// modification
-  ItemsEntityModificationResult<T> removeItemAt({
+  ItemModificationResult<T> removeItemAt({
     required int index,
     required IndexRange mountedRange,
   }) {
@@ -158,9 +235,9 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
 
   /// Removes an item by its [id].
   ///
-  /// Returns [ItemsEntityModificationResult], which contains info about the
+  /// Returns [ItemModificationResult], which contains info about the
   /// modification
-  ItemsEntityModificationResult<T> removeItemById({
+  ItemModificationResult<T> removeItemById({
     required String id,
     required IndexRange mountedRange,
   }) {
@@ -169,9 +246,9 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
 
   /// Removes an item
   ///
-  /// Returns [ItemsEntityModificationResult], which contains info about the
+  /// Returns [ItemModificationResult], which contains info about the
   /// modification
-  ItemsEntityModificationResult<T> removeItem({
+  ItemModificationResult<T> removeItem({
     required T item,
     required IndexRange mountedRange,
   }) {
@@ -318,18 +395,15 @@ extension SortedIntSplayTreeSet on SplayTreeSet<int> {
 /// {@template items_entity_modification_result}
 /// Model, that contains info about an item modification:
 ///
-/// 1. The [item] itself
-/// 2. Wheter [ItemsEntity().actualList] changed
-/// 3. Wheter [ItemsEntity().visibleItems] changed
+/// 1. Wheter [ItemsEntity().actualList] changed
+/// 2. Wheter [ItemsEntity().visibleItems] changed
 /// {@endtemplate}
-@sealed
 @immutable
-class ItemsEntityModificationResult<T> {
-  /// Creates an [ItemsEntityModificationResult]
-  const ItemsEntityModificationResult({
+abstract class ModificationResult<T> {
+  /// Creates a [ModificationResult]
+  const ModificationResult({
     required this.actualListChanged,
     required this.visibleItemsChanged,
-    required this.item,
   });
 
   /// Wheter [ItemsEntity().actualList] changed
@@ -337,9 +411,42 @@ class ItemsEntityModificationResult<T> {
 
   /// Wheter [ItemsEntity().visibleItems] changed
   final bool visibleItemsChanged;
+}
+
+/// {@template item_modification_result}
+/// Implementation of [ModificationResult], which contains one item
+/// modification info.
+/// {@endtemplate}
+@sealed
+@immutable
+class ItemModificationResult<T> extends ModificationResult<T> {
+  /// Creates an [ItemModificationResult]
+  const ItemModificationResult({
+    required super.actualListChanged,
+    required super.visibleItemsChanged,
+    required this.item,
+  });
 
   /// The item, which was modified
   final T item;
+}
+
+/// {@template items_modification_result}
+/// Implementation of [ModificationResult], which contains many items
+/// modification info.
+/// {@endtemplate}
+@sealed
+@immutable
+class ItemsModificationResult<T> extends ModificationResult<T> {
+  /// Creates an [ItemsModificationResult]
+  const ItemsModificationResult({
+    required super.actualListChanged,
+    required super.visibleItemsChanged,
+    required this.items,
+  });
+
+  /// The items, which was modified
+  final List<T> items;
 }
 
 /// {@template delayed_modification_wrapper}

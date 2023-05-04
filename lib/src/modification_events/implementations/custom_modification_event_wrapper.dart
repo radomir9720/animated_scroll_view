@@ -44,6 +44,7 @@ class CustomModificationEventWrapper<T> extends ModificationEvent<T> {
     required ItemsNotifier<T> itemsNotifier,
     required EventController<T> eventController,
     required ItemsAnimationController itemsAnimationController,
+    required Type scrollViewType,
   }) {
     return onExecute(
       vsync,

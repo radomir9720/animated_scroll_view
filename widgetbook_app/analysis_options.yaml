@@ -3,7 +3,6 @@ include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     depend_on_referenced_packages: false
-    invalid_use_of_protected_member: false
 
 analyzer:
   exclude:

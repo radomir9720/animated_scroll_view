@@ -18,5 +18,43 @@ abstract class ModificationEvent<T> {
     required ItemsNotifier<T> itemsNotifier,
     required EventController<T> eventController,
     required ItemsAnimationController itemsAnimationController,
+    required Type scrollViewType,
   });
+}
+
+/// Extension on [Type].
+///
+/// Provides a pattern-matching function [when()]
+extension ScrollViewTypeExtension on Type {
+  /// Pattern-matching function. Executes function which corresponds to
+  /// [AnimatedScrollView] type/subtype and returns the execution result.
+  ///
+  /// If type is not one of the default implementations:
+  ///
+  /// - [AnimatedListView],
+  /// - [SliverAnimatedListView],
+  /// - [AnimatedGridView],
+  /// - [SliverAnimatedGridView],
+  /// - [AnimatedPageView]
+  ///
+  /// then [orElse] callback is executed, which provides the runtimeType of
+  /// the current ScrollView.
+  R when<R, T>({
+    required R Function() grid,
+    required R Function() list,
+    required R Function() pageView,
+    required R Function(Type type) orElse,
+  }) {
+    if ((this == AnimatedListView<T>) || (this == SliverAnimatedListView<T>)) {
+      return list();
+    }
+
+    if ((this == AnimatedGridView<T>) || (this == SliverAnimatedGridView<T>)) {
+      return grid();
+    }
+
+    if (this == AnimatedPageView<T>) return pageView();
+
+    return orElse(this);
+  }
 }

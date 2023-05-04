@@ -12,7 +12,14 @@ import 'package:meta/meta.dart';
 ///
 /// See also:
 ///  * [InsertItemEvent]
+///  * [InsertAllItemsEvent]
+///  * [InsertInfluencedItemEvent]
+///  * [InsertAdaptiveItemEvent]
+///  * [RemoveInfluencedItemEvent]
+///  * [RemoveAdaptiveItemEvent]
 ///  * [MoveItemEvent]
+///  * [MoveInfluencedItemEvent]
+///  * [MoveAdaptiveItemEvent]
 ///  * [CustomModificationEventWrapper]
 class RemoveItemEvent<T>
     extends ModificationEventWithItemAndItemIdConstructors<T>
@@ -31,9 +38,11 @@ class RemoveItemEvent<T>
     this.forceNotify = false,
   }) : super.byId(itemId);
 
+  /// {@template remove_item_event.force_notify}
   /// Whether should [ItemsNotifier] notify its listeners immediately
   /// after removing the item, or delegate this task to the
   /// [ItemsNotifier] itself
+  /// {@endtemplate}
   ///
   /// Defaults to `false`
   @protected
@@ -51,7 +60,7 @@ class RemoveItemEvent<T>
     required TickerProvider vsync,
     required EventController<T> eventController,
     required ItemsAnimationController itemsAnimationController,
-    AnimationControllerConfig? removeAnimationConfig,
+    required Type scrollViewType,
   }) async {
     final itemId = getItemId(itemsNotifier.idMapper);
 
