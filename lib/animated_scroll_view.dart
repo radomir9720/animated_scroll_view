@@ -1,4 +1,5 @@
-/// A Very Good Project created by Very Good CLI.
+/// Scrollable widgets, which lets you easily animate its items list
+/// modifications(insert, remove, move, etc.).
 // ignore_for_file: directives_ordering
 
 library animated_scroll_view;
