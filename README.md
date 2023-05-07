@@ -7,9 +7,9 @@ Scrollable widgets, which lets you easily animate its items list modifications(i
 
 At the moment, this package provides `ListView`, `GridView`, and `PageView` implementations.
 
-`AnimatedListView` / `SliverAnimatedListView`|`AnimatedGridView` / `SliverAnimatedGridView`
-:-------------------------------------------:|:-------------------------------------------:
-![](doc/images/animated_list_view_general_demo.gif)|![](doc/images/animated_grid_view_general_demo.gif)
+`AnimatedListView` / `SliverAnimatedListView` | `AnimatedGridView` / `SliverAnimatedGridView` 
+:---: | :---: 
+<img src="https://raw.githubusercontent.com/radomir9720/animated_scroll_view/main/doc/images/animated_list_view_general_demo.gif"/>|<img src="https://raw.githubusercontent.com/radomir9720/animated_scroll_view/main/doc/images/animated_grid_view_general_demo.gif"/>
 
 ## **Disclaimer**
 _Be careful using this package in production because there are still many untested cases._
@@ -29,8 +29,8 @@ because of their numerous disadvantages:
 
 - Scroll offset jumps when an item is built atop(outside) of the current
 layout(Issue [#74031](https://github.com/flutter/flutter/issues/74031)):
-
-  ![](doc/images/animated_list_offset_jump_demo.gif)
+  
+  <img src="https://raw.githubusercontent.com/radomir9720/animated_scroll_view/main/doc/images/animated_list_offset_jump_demo.gif"/>
 - Out-of-the-box animated scrollables have inconvinient API, developer
 is required to write a lot of code to make it work
 - There is a lot of cases when developer can forget/miss something to setup,
@@ -40,7 +40,7 @@ flutter version below 3.7.0
 
 Also, `AnimatedPageView` widget can be useful for you, as it does not have an out of the box analogue:
 
-![](doc/images/animated_page_view_general_demo.gif)
+<img src="https://raw.githubusercontent.com/radomir9720/animated_scroll_view/main/doc/images/animated_page_view_general_demo.gif"/>
 
 There are already implementations-replacements for each of the
 out-of-the-box animated scrollables mentioned above:
