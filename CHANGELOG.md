@@ -1,3 +1,8 @@
+# 1.0.1
+* **FIX**: last item is inserted without animation by `InserAllItemsEvent`
+* **CI**: fix publishing workflow
+* **DOCS**: updated readme
+
 # 1.0.0
 * **BREAKING FEAT**: animate items, rebuild of which is caused by another items modification event *(breaking change: added `scrollViewType` parameter to `ModificationEvent.execute()` method)*
 * **FEAT**: added new events: 

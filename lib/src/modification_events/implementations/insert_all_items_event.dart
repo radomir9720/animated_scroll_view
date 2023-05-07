@@ -72,45 +72,43 @@ class InsertAllItemsEvent<T> extends ModificationEvent<T>
 
     throwIfIndexIsInvalid(itemsNotifier, _index);
 
-    final mountedRange = itemsNotifier.mountedWidgetsIndexRange;
+    final itemsIds = items.map(itemsNotifier.idMapper);
+    final modificationIds = itemsIds.map(Modification.insert.interpolate);
 
-    final insertRange = IndexRange(start: _index, end: _index + items.length);
-
-    final intersectionRange = mountedRange.getIntersection(insertRange);
-
-    final modified = [...itemsNotifier.actualList]..insertAll(_index, items);
-    final intersectionList = intersectionRange == null
-        ? <T>[]
-        : modified.sublist(intersectionRange.start, intersectionRange.end + 1);
-    final intersectionListIds = intersectionList.map(itemsNotifier.idMapper);
-    final intersectionListModificationIds =
-        intersectionListIds.map(Modification.insert.interpolate);
-
-    for (final modificationId in intersectionListModificationIds) {
+    for (final modificationId in modificationIds) {
       itemsAnimationController.cachedAnimationValue[modificationId] =
           animationConfig.lowerBound;
     }
 
     final delayedAnimation = DelayedInMemoryAnimation<AnimationController>(
-      createAnimationCallback: (vsync) {
+      createAnimationCallback: (_) {
         return getAnimation(vsync, config: animationConfig);
       },
-      runCallback: (animation) {
-        for (final modificationId in intersectionListModificationIds) {
+      runCallback: (animation) async {
+        for (final modificationId in modificationIds) {
           itemsAnimationController.cachedAnimationValue[modificationId] =
               animationConfig.uppedBound;
         }
 
-        return animation.forward();
+        return animation.forward().then((value) {
+          for (final modificationId in modificationIds) {
+            itemsAnimationController.inMemoryAnimationMap
+                .remove(modificationId);
+          }
+          dispose();
+        });
       },
-      disposeCallback: (animation) {
-        animation
-          ..stop()
-          ..dispose();
-      },
+      // Reason why we don't dispose the animation in this callback is that
+      // we are using one single animation for all the items, and we do not
+      // want to dispose the animation when some item was disposed, because
+      // that way all the other items will not be animated.
+      //
+      // The animation is disposed a few lines above, in the [then()] calllback
+      // of the [animation.forward()] method, when the animation is completed.
+      disposeCallback: (animation) {},
     );
 
-    for (final modificationId in intersectionListModificationIds) {
+    for (final modificationId in modificationIds) {
       itemsAnimationController.inMemoryAnimationMap[modificationId] =
           delayedAnimation;
     }

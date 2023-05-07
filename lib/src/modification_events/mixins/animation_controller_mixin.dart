@@ -26,9 +26,8 @@ mixin AnimationControllerMixin<T> on ModificationEvent<T> {
   /// Stops and disposes instansiated previously [AnimationController].
   /// If [AnimationController] was not instantiated, does nothing.
   void dispose() {
-    _animation
-      ?..stop()
-      ..dispose();
+    if (_animation == null) return;
+    _animation?.dispose();
     _animation = null;
   }
 }
