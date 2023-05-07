@@ -3,7 +3,7 @@ description: Scrollable widgets, that helps you easily animate items removing, i
 repository: https://github.com/radomir9720/animated_scroll_view  
 homepage: https://github.com/radomir9720/animated_scroll_view
 
-version: 1.0.1
+version: 1.0.1+1
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
