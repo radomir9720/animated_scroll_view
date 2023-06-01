@@ -88,6 +88,7 @@ Status  |Task Name
 ✅|AnimatedPageView([#58959](https://github.com/flutter/flutter/issues/58959))?
 ✅|Wrap ItemWidget in `SizedAndFadeTransition` and `PointerIgnorer` by default?
 ✅|Widgetbook with live demo examples
+⬜|Removing previous page of `PageeView` without index changing([#58959](https://github.com/flutter/flutter/issues/58959))?
 
 
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
