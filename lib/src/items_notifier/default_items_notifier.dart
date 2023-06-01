@@ -168,7 +168,10 @@ class DefaultItemsNotifier<T> extends ItemsNotifier<T>
 
   @override
   void updateValue(List<T> items, {bool forceNotify = false}) {
-    if (const DeepCollectionEquality().equals(_itemsEntity, items)) return;
+    if (const DeepCollectionEquality()
+        .equals(_itemsEntity.actualItems, items)) {
+      return;
+    }
 
     _itemsEntity = ItemsEntity(items);
     if (mapperIsPresent) _itemsEntity.idMapper = idMapper;
