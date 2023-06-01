@@ -2,6 +2,7 @@ name: animated_scroll_view
 description: Scrollable widgets, that helps you easily animate items removing, inserting, moving etc.
 repository: https://github.com/radomir9720/animated_scroll_view  
 homepage: https://github.com/radomir9720/animated_scroll_view
+issue_tracker: https://github.com/radomir9720/animated_scroll_view/issues
 
 version: 1.0.1+1
 
