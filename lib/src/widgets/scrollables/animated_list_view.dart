@@ -12,6 +12,8 @@ class AnimatedListView<T> extends AnimatedScrollView<T> {
   AnimatedListView({
     super.key,
     super.itemsNotifier,
+    super.itemWrapper,
+    super.itemsAnimationController,
     required super.items,
     required super.idMapper,
     required super.itemBuilder,
