@@ -107,23 +107,26 @@ class MoveItemEvent<T> extends ModificationEventWithItemAndItemIdConstructors<T>
       throw ItemNotFoundException(itemId);
     }
 
-    final _newIndex = newIndex == itemsNotifier.actualList.length - 1
-        ? newIndex
-        : currentIndex < newIndex
-            ? newIndex + 1
-            : newIndex;
+    final visible = itemsNotifier.value.any((element) {
+      return itemsNotifier.idMapper(element.value) == itemId;
+    });
+
+    final _newIndex =
+        visible && currentIndex < newIndex ? newIndex + 1 : newIndex;
 
     throwIfIndexIsInvalid(itemsNotifier, _newIndex);
 
     final animationConfigs = animationConfigsBuilder?.call(currentIndex) ??
         const RemoveAndInsertAnimationConfigs();
 
-    final current = generateRemoveAnimation(
-      itemId: itemId,
-      itemsNotifier: itemsNotifier,
-      removeAnimationConfig: animationConfigs.remove,
-      itemsAnimationController: itemsAnimationController,
-    );
+    final current = visible
+        ? generateRemoveAnimation(
+            itemId: itemId,
+            itemsNotifier: itemsNotifier,
+            removeAnimationConfig: animationConfigs.remove,
+            itemsAnimationController: itemsAnimationController,
+          )
+        : itemsNotifier.markRemovedById(itemId);
 
     eventController.add(
       InsertItemEvent(
