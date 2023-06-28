@@ -31,4 +31,4 @@ jobs:
         with:
           workingDir: widgetbook_app
           baseHref: /animated_scroll_view/
-          customArgs: "-t lib/main.widgetbook.dart"
+          customArgs: "-t lib/main.dart"
