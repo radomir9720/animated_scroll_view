@@ -5,10 +5,11 @@ import 'package:widgetbook_app/widgets/scrollables/models/my_model.dart';
 import 'package:widgetbook_app/widgets/scrollables/widgets/controls_wrapper.dart';
 import 'package:widgetbook_app/utils/knobs.dart';
 
-@WidgetbookUseCase(name: 'Default', type: AnimatedGridView)
+@UseCase(name: 'Default', type: AnimatedGridView)
 Widget buildAnimatedGridView(BuildContext context) {
   return AnimatedScrollViewControlsWrapper(
     forceNotifyOnMoveAndRemove: true,
+    itemCount: context.itemsCountKnob(),
     viewBuilder: (itemsNotifier, eventController, items) {
       return AnimatedGridView<MyModel>(
         scrollDirection: context.axis,

@@ -2,7 +2,7 @@
 
 import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/material.dart';
-import 'package:widgetbook/widgetbook.dart' hide WidgetbookUseCase;
+import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 import 'package:widgetbook_app/utils/knobs.dart';
 
@@ -11,35 +11,18 @@ OperationPointerIgnoreCondition _getOperationPointerIgnoreCondition({
   required BuildContext context,
 }) {
   final options = [
-    Option(
-      label: 'equalsTo',
-      value: conditionValue.equalsTo,
-    ),
-    Option(
-      label: 'notEqualsTo',
-      value: conditionValue.notEqualsTo,
-    ),
-    Option(
-      label: 'greaterThan',
-      value: conditionValue.greaterThan,
-    ),
-    Option(
-      label: 'greaterOrEqualTo',
-      value: conditionValue.greaterOrEqualTo,
-    ),
-    Option(
-      label: 'lessThan',
-      value: conditionValue.lessThan,
-    ),
-    Option(
-      label: 'lessOrEqualTo',
-      value: conditionValue.lessOrEqualTo,
-    ),
+    conditionValue.equalsTo,
+    conditionValue.notEqualsTo,
+    conditionValue.greaterThan,
+    conditionValue.greaterOrEqualTo,
+    conditionValue.lessThan,
+    conditionValue.lessOrEqualTo,
   ];
 
-  final condition = context.knobs.options(
+  final condition = context.knobs.list(
     label: 'Condition',
     options: options,
+    labelBuilder: (value) => value.operation.name,
   );
 
   if (condition.value != conditionValue) {
@@ -58,7 +41,7 @@ extension on double {
   }
 }
 
-@WidgetbookUseCase(name: 'Default', type: PointerIgnorer)
+@UseCase(name: 'Default', type: PointerIgnorer)
 Widget defaultPointerIgnorerUseCase(BuildContext context) {
   final conditionValue = context.zeroToOneSlider('Condition value').asFixed();
   final animationValue = context.zeroToOneSlider('Animation value').asFixed();

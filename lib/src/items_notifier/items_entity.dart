@@ -48,6 +48,7 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
     String? modificationId,
   }) {
     final shouldBeDisplayed = index >= mountedRange.start;
+
     final wrapper = shouldBeDisplayed
         ? DelayedModificationWrapper.none(
             element,
@@ -57,10 +58,8 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
             element,
             modificationId: modificationId,
           );
-    super.insert(
-      index,
-      wrapper,
-    );
+
+    super.insert(index, wrapper);
 
     _updateCachedLists();
 
@@ -318,8 +317,7 @@ class ItemsEntity<T> extends DelegatingList<DelayedModificationWrapper<T>>
     DelayedModificationWrapper<T> Function(
       DelayedModificationWrapper<T> item,
       int index,
-    )?
-        mapper,
+    )? mapper,
   ]) {
     final visibleItems = <ModificatedItem<T>>[];
     final actualItems = <T>[];

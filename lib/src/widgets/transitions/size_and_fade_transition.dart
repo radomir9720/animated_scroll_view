@@ -59,15 +59,20 @@ class SizeAndFadeTransition extends StatelessWidget {
     // https://github.com/flutter/flutter/pull/114120
     // https://github.com/flutter/flutter/issues/119499
     // So the [Scrollable.of] method will work differently on versions below
-    // 3.7 and on >=3.7. On versions >= 3.7 it will throw a [FlutterErrpr]
+    // 3.7 and on >=3.7. On versions >= 3.7 it will throw a [FlutterError]
     // if there is no [Scrollable] ancestor found. But in our case it is not
     // a problem, because [SizeAndFadeTrsnsition] widget by default is placed
     // in a Scrollable.
-    // ignore: invalid_null_aware_operator
-    final axisDirection = Scrollable.of(context)?.axisDirection;
-
-    final axis =
-        axisDirection == null ? null : axisDirectionToAxis(axisDirection);
+    Axis? axis;
+    try {
+      // ignore: invalid_null_aware_operator
+      final axisDirection = Scrollable.of(context)?.axisDirection;
+      axis = axisDirectionToAxis(
+        ArgumentError.checkNotNull(axisDirection, 'AxisDirection'),
+      );
+    } on Object {
+      axis = null;
+    }
 
     return SizeTransition(
       sizeFactor: animation,

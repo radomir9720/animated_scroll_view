@@ -14,7 +14,11 @@ At the moment, this package provides `ListView`, `GridView`, and `PageView` impl
 ## **Disclaimer**
 _Be careful using this package in production because there are still many untested cases._
 
-## **[LIVE DEMO](https://radomir9720.github.io/animated_scroll_view/#/)**
+## **[LIVE DEMO][live_demo_link]**
+## **[MEDIUM ARTICLE][medium_article_link]**
+## **[API REFERENCE][api_reference_link]**
+
+
 _Examples(from live demo) can be found [here][live_demo_examples_link].
 Real application examples can be found [here][real_app_example_link1] and [here][real_app_example_link2]_
 
@@ -53,7 +57,6 @@ out-of-the-box animated scrollables mentioned above:
 Also, you can extend `AnimatedScrollView`, and create your own
 implementation, using the API of this package.
 
-## Open the [API reference](api_reference_link) page to see the docs.
 
 ## Installation 💻
 
@@ -88,6 +91,7 @@ Status  |Task Name
 ✅|AnimatedPageView([#58959](https://github.com/flutter/flutter/issues/58959))?
 ✅|Wrap ItemWidget in `SizedAndFadeTransition` and `PointerIgnorer` by default?
 ✅|Widgetbook with live demo examples
+⬜|Removing previous page of `PageeView` without index changing([#58959](https://github.com/flutter/flutter/issues/58959))?
 
 
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
@@ -98,3 +102,5 @@ Status  |Task Name
 [real_app_example_link2]: https://github.com/radomir9720/pixel_app_flutter/blob/cbeb620a8b52c745b2ffc87c234c5c29755a979a/lib/presentation/screens/apps/body/tablet_apps_screen_body.dart#L111
 [live_demo_examples_link]: https://github.com/radomir9720/animated_scroll_view/tree/main/widgetbook_app/lib/widgets/scrollables
 [api_reference_link]: https://pub.dev/documentation/animated_scroll_view/latest/animated_scroll_view/animated_scroll_view-library.html
+[medium_article_link]: https://medium.com/@radomir9720/animate-list-items-in-flutter-100ec796e618
+[live_demo_link]: https://radomir9720.github.io/animated_scroll_view/#/

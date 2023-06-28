@@ -53,6 +53,11 @@ extension on Finder {
   }
 }
 
+class RepaintNotifier extends ValueNotifier<int> {
+  RepaintNotifier() : super(0);
+  void notify() => value += 1;
+}
+
 extension GlobalPaintBounds on BuildContext {
   Rect? get globalPaintBounds {
     final renderObject = findRenderObject();
@@ -73,18 +78,21 @@ void main() {
     late DefaultEventController<MyModel> eventController;
     late DefaultItemsNotifier<MyModel> itemsNotifier;
     late ScrollController scrollController;
+    late RepaintNotifier repaintNotifier;
     const _defaultItemsCount = 50;
 
     setUp(() {
       eventController = DefaultEventController();
       itemsNotifier = DefaultItemsNotifier();
       scrollController = ScrollController();
+      repaintNotifier = RepaintNotifier();
     });
 
     tearDown(() {
       eventController.close();
       itemsNotifier.dispose();
       scrollController.dispose();
+      repaintNotifier.dispose();
     });
 
     String _getId(int index) => 'ID: $index';
@@ -774,6 +782,78 @@ void main() {
           expect(tester.getRect(firstMountedItemFinder), initialRect);
         },
       );
+
+      testWidgets('Rebuild does not not affect the logic', (tester) async {
+        // arrange
+        var itemsCount = 3;
+        var items = List<MyModel>.generate(
+          itemsCount,
+          (index) => MyModel(id: index),
+        );
+        itemsNotifier.dispose();
+        itemsNotifier = DefaultItemsNotifier(
+          onItemsUpdate: (updatedList) {
+            items = updatedList;
+          },
+        );
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: ValueListenableBuilder(
+                valueListenable: repaintNotifier,
+                builder: (context, value, child) {
+                  return AnimatedListView<MyModel>(
+                    items: items,
+                    controller: scrollController,
+                    itemsNotifier: itemsNotifier,
+                    eventController: eventController,
+                    idMapper: (object) => object.id.toString(),
+                    itemBuilder: (item) =>
+                        ListTile(title: Text(_getId(item.id))),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+
+        // act
+        eventController.insert(item: MyModel(id: itemsCount++), index: 0);
+        repaintNotifier.notify();
+        await tester.pumpAndSettle();
+        eventController.removeById(
+          itemId: itemsNotifier.actualList.last.id.toString(),
+        );
+        repaintNotifier.notify();
+        await tester.pumpAndSettle();
+        eventController.insert(item: MyModel(id: itemsCount++), index: 0);
+        repaintNotifier.notify();
+        await tester.pumpAndSettle();
+
+        // assert
+        final firstItemId = itemsCount - 1;
+        final firstItemFinder = find.byKey(firstItemId.vk);
+        expect(firstItemFinder, findsOneWidget);
+        final firstItemRect = tester.getRect(firstItemFinder);
+        final expectedOrder = <MapEntry<int, Rect>>[
+          MapEntry(firstItemId, firstItemRect),
+          MapEntry(
+            firstItemId - 1,
+            firstItemRect.shift(Offset(0, firstItemRect.height)),
+          ),
+          MapEntry(
+            0,
+            firstItemRect.shift(Offset(0, firstItemRect.height * 2)),
+          ),
+          MapEntry(
+            1,
+            firstItemRect.shift(Offset(0, firstItemRect.height * 3)),
+          ),
+        ];
+        for (final item in expectedOrder) {
+          expect(tester.getRect(find.byKey(item.key.vk)), item.value);
+        }
+      });
     });
   });
 }

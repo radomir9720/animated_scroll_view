@@ -76,7 +76,7 @@ abstract class ItemsNotifier<T> extends ChangeNotifier
   /// Consider using [onItemsUpdate] callback instead  of listening
   /// the notifier.
   ///
-  /// Alos, if you want just to get the current item list, please use
+  /// Also, if you want just to get the current item list, please use
   /// [ItemsNotifier.actualList] getter instead of this getter
   @override
   List<ModificatedItem<T>> get value;

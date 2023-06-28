@@ -19,8 +19,15 @@ typedef OnExecuteCustomEventCallback<T> = Future<void> Function(
 ///
 /// See also:
 ///  * [InsertItemEvent]
+///  * [InsertAllItemsEvent]
+///  * [InsertAdaptiveItemEvent]
+///  * [InsertInfluencedItemEvent]
 ///  * [RemoveItemEvent]
+///  * [RemoveInfluencedItemEvent]
+///  * [RemoveAdaptiveItemEvent]
 ///  * [MoveItemEvent]
+///  * [MoveInfluencedItemEvent]
+///  * [MoveAdaptiveItemEvent]
 class CustomModificationEventWrapper<T> extends ModificationEvent<T> {
   /// Creates a [CustomModificationEventWrapper] using given [onExecute]
   /// callback
@@ -32,8 +39,15 @@ class CustomModificationEventWrapper<T> extends ModificationEvent<T> {
   ///
   /// See also:
   ///  * [InsertItemEvent]
+  ///  * [InsertAllItemsEvent]
+  ///  * [InsertAdaptiveItemEvent]
+  ///  * [InsertInfluencedItemEvent]
   ///  * [RemoveItemEvent]
+  ///  * [RemoveInfluencedItemEvent]
+  ///  * [RemoveAdaptiveItemEvent]
   ///  * [MoveItemEvent]
+  ///  * [MoveInfluencedItemEvent]
+  ///  * [MoveAdaptiveItemEvent]
   @protected
   @visibleForTesting
   final OnExecuteCustomEventCallback<T> onExecute;

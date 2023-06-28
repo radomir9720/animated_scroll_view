@@ -1,9 +1,9 @@
 import 'package:animated_scroll_view/animated_scroll_view.dart';
 import 'package:flutter/material.dart';
-import 'package:widgetbook/widgetbook.dart' hide WidgetbookUseCase;
+import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
-@WidgetbookUseCase(name: 'Default', type: SizeAndFadeTransition)
+@UseCase(name: 'Default', type: SizeAndFadeTransition)
 Widget defaultSizeAndFadeTransitionUseCase(BuildContext context) {
   return Builder(
     builder: (context) {
@@ -24,47 +24,41 @@ Widget defaultSizeAndFadeTransitionUseCase(BuildContext context) {
 
 extension on BuildContext {
   double get lowerBoundAnimationKnob {
-    return knobs
-        .number(
-          label: 'Lower animation bound',
-          initialValue: 0,
-        )
-        .toDouble();
+    return knobs.double.input(
+      label: 'Lower animation bound',
+      initialValue: 0,
+    );
   }
 
   double get upperBoundAnimationKnob {
-    return knobs
-        .number(
-          label: 'Upper animation bound',
-          initialValue: 1,
-        )
-        .toDouble();
+    return knobs.double.input(
+      label: 'Upper animation bound',
+      initialValue: 1,
+    );
   }
 
   double get initialValueAnimationKnob {
-    return knobs
-        .number(label: 'Initial animation value', initialValue: 1)
-        .toDouble();
+    return knobs.double.input(
+        label: 'Initial animation value', initialValue: 1);
   }
 
   Axis get sizeTransitionAxis {
-    return knobs.options(
+    return knobs.list<Axis>(
       label: 'Size transition axis',
-      options: const [
-        Option(label: 'vertical', value: Axis.vertical),
-        Option(label: 'horizontal', value: Axis.horizontal),
+      labelBuilder: (value) => value.name,
+      options: const <Axis>[
+        Axis.vertical,
+        Axis.horizontal,
       ],
     );
   }
 
   Duration get animationDurationKnob {
     return Duration(
-      milliseconds: knobs
-          .number(
-            label: 'Duration(milliseconds)',
-            initialValue: 200,
-          )
-          .toInt(),
+      milliseconds: knobs.double.input(
+        label: 'Duration(milliseconds)',
+        initialValue: 200,
+      ).toInt(),
     );
   }
 }

@@ -4,10 +4,10 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 import 'package:widgetbook_app/widgets/scrollables/widgets/controls_wrapper.dart';
 import 'package:widgetbook_app/utils/knobs.dart';
 
-@WidgetbookUseCase(name: 'Default', type: AnimatedPageView)
+@UseCase(name: 'Default', type: AnimatedPageView)
 Widget buildAnimatedPageView(BuildContext context) {
   return AnimatedScrollViewControlsWrapper(
-    itemCount: 5,
+    itemCount: context.itemsCountKnob(count: 5),
     forceNotifyOnMoveAndRemove: true,
     viewBuilder: (itemsNotifier, eventController, items) {
       return AnimatedPageView(
