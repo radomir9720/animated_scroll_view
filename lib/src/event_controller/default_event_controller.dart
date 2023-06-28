@@ -39,12 +39,10 @@ class DefaultEventController<T> extends EventController<T> {
   Stream<ModificationEvent<T>> asBroadcastStream({
     void Function(
       StreamSubscription<ModificationEvent<T>> subscription,
-    )?
-        onListen,
+    )? onListen,
     void Function(
       StreamSubscription<ModificationEvent<T>> subscription,
-    )?
-        onCancel,
+    )? onCancel,
   }) {
     return controller.stream.asBroadcastStream(
       onListen: onListen,
