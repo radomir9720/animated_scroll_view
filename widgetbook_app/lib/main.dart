@@ -1,45 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+import 'package:widgetbook/widgetbook.dart';
 
-@WidgetbookApp.material(
-  name: 'animated_scroll_view',
-  foldersExpanded: true,
-  widgetsExpanded: true,
-  devices: [
-    Apple.iPhoneSE2016,
-    Apple.iPhoneSE2020,
-    Apple.iPhone11ProMax,
-    Apple.iPadPro12inch,
-    Samsung.s10,
-    Samsung.s21ultra,
-    Apple.macBook13Inch,
-    Apple.iPad10Inch,
-  ],
-)
-class AnimatedScrollViewApp {}
+import 'main.directories.g.dart';
 
-@WidgetbookTheme(name: 'Light', isDefault: true)
-ThemeData getDarkTheme() => ThemeData(
-      scaffoldBackgroundColor: Colors.white,
-      colorScheme: const ColorScheme.light(
-        primary: Colors.blueAccent,
-        background: Colors.white,
-        onPrimary: Colors.black,
-      ),
-      inputDecorationTheme: const InputDecorationTheme(
-        border: OutlineInputBorder(),
-      ),
+void main() => runApp(const AnimatedScrollViewApp());
+
+@widgetbook.App()
+class AnimatedScrollViewApp extends StatelessWidget {
+  const AnimatedScrollViewApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Widgetbook.material(
+      directories: directories,
+      addons: [
+        DeviceFrameAddon(
+          initialDevice: Devices.ios.iPhoneSE,
+          devices: [
+            Devices.ios.iPhoneSE,
+            Devices.ios.iPhone12ProMax,
+            Devices.ios.iPad12InchesGen4,
+            Devices.android.samsungGalaxyS20,
+            Devices.android.samsungGalaxyNote20,
+            Devices.macOS.macBookPro,
+            Devices.ios.iPad,
+          ],
+        ),
+        MaterialThemeAddon(
+          themes: [
+            WidgetbookTheme<ThemeData>(
+              name: 'Light',
+              data: ThemeData(
+                scaffoldBackgroundColor: Colors.white,
+                colorScheme: const ColorScheme.light(
+                  primary: Colors.blueAccent,
+                  background: Colors.white,
+                  onPrimary: Colors.black,
+                ),
+                inputDecorationTheme: const InputDecorationTheme(
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            WidgetbookTheme<ThemeData>(
+              name: 'Dark',
+              data: ThemeData(
+                scaffoldBackgroundColor: Colors.grey.shade900,
+                colorScheme: ColorScheme.dark(
+                  primary: Colors.blueAccent,
+                  onPrimary: Colors.white,
+                  background: Colors.grey.shade900,
+                ),
+                inputDecorationTheme: const InputDecorationTheme(
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
-
-@WidgetbookTheme(name: 'Dark')
-ThemeData getLightTheme() => ThemeData(
-      scaffoldBackgroundColor: Colors.grey.shade900,
-      colorScheme: ColorScheme.dark(
-        primary: Colors.blueAccent,
-        onPrimary: Colors.white,
-        background: Colors.grey.shade900,
-      ),
-      inputDecorationTheme: const InputDecorationTheme(
-        border: OutlineInputBorder(),
-      ),
-    );
+  }
+}

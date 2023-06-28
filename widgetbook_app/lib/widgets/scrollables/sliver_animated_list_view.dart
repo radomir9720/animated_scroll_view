@@ -5,9 +5,10 @@ import 'package:widgetbook_app/widgets/scrollables/widgets/controls_wrapper.dart
 import 'package:widgetbook_app/widgets/scrollables/widgets/list_view_item.dart';
 import 'package:widgetbook_app/utils/knobs.dart';
 
-@WidgetbookUseCase(name: 'Default', type: SliverAnimatedListView)
+@UseCase(name: 'Default', type: SliverAnimatedListView)
 Widget buildSliverAnimatedListView(BuildContext context) {
   return AnimatedScrollViewControlsWrapper(
+    itemCount: context.itemsCountKnob(),
     viewBuilder: (itemsNotifier, eventController, items) {
       final axis = context.axis;
 

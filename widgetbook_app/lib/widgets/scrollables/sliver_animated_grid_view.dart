@@ -4,10 +4,11 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 import 'package:widgetbook_app/widgets/scrollables/widgets/controls_wrapper.dart';
 import 'package:widgetbook_app/utils/knobs.dart';
 
-@WidgetbookUseCase(name: 'Default', type: SliverAnimatedGridView)
+@UseCase(name: 'Default', type: SliverAnimatedGridView)
 Widget buildSliverAnimatedGridView(BuildContext context) {
   return AnimatedScrollViewControlsWrapper(
     forceNotifyOnMoveAndRemove: true,
+    itemCount: context.itemsCountKnob(),
     viewBuilder: (itemsNotifier, eventController, items) {
       return CustomScrollView(
         scrollDirection: context.axis,
