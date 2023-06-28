@@ -1,3 +1,9 @@
+# 1.0.2
+* **FIX**: `DefaultItemsNotifier().updateValue()` incorrect items equality check
+* **FIX**: incorrect index when moving an item that should be inserted to greater index
+* **FIX**: added forgotten `itemWrapper` and `itemsAnimationController` parameters to scrollables
+* **FIX(SizeAndFadeTransition)**: do not throw exception if there is no `Scrollable` ancestor
+
 # 1.0.1
 * **FIX**: last item is inserted without animation by `InserAllItemsEvent`
 * **CI**: fix publishing workflow
